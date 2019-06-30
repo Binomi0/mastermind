@@ -1,0 +1,37 @@
+.dashboard {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.dashboard > h1 {
+    font-size: 5rem;
+}
+
+button.new-game-button {
+    color: #444;
+    background-color: orange;
+    padding: 1rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard > h1 {
+        font-size: 2.5rem;
+    }
+
+    button.new-game-button {
+        padding: .5rem;
+        border-radius: 4px;
+        border: none;
+        font-size: 1rem;
+        text-transform: uppercase;
+        font-weight: 900;
+    }
+}

@@ -1,0 +1,14 @@
+.App {
+    display: flex;
+
+    /* height: 100vh;
+    width: 100vw; */
+    justify-content: center;
+    background: rgb(32, 32, 41);
+    text-align: center;
+}
+
+body {
+    color: #ccc;
+    background: rgb(32, 32, 41);
+}

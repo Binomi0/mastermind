@@ -1,0 +1,40 @@
+.ficha {
+    cursor: pointer;
+    width: 5rem;
+    height: 5rem;
+    margin: .5rem;
+    background: white;
+    border-radius: 50%;
+    border: 1px solid burlywood;
+}
+
+.ficha-seleccionable {
+    cursor: pointer;
+    width: 6rem;
+    height: 6rem;
+    margin: .5rem;
+    background: white;
+    border-radius: 50%;
+    border: 1px solid burlywood;
+}
+
+.question {
+    color: red;
+    font-size: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    .ficha {
+        width: 1.8rem;
+        height: 1.8rem;
+        margin: .2rem;
+        border: none;
+    }
+
+    .ficha-seleccionable {
+        width: 1rem;
+        height: 1rem;
+        margin: .2rem;
+        border: none;
+    }
+}

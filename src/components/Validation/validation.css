@@ -1,0 +1,45 @@
+.validation-group, .validation-group-hover {
+    display: flex;
+    width: 2.4rem;
+    margin: auto;
+    padding: 0;
+    justify-content: space-between;
+}
+
+.validation-group-hover:hover {
+    background: grey;
+}
+
+.columna {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.validation-item {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: .1rem;
+    background: white;
+    border-radius: 50%;
+    border: 1px solid red;
+}
+
+.item-1 {
+    background: red;
+}
+
+.item-2 {
+    background: green;
+}
+
+@media screen and (max-width: 768px) {
+    .validation-group, .validation-group-hover {
+        width: 1.5rem;
+    }
+
+    .validation-item {
+        width: .6rem;
+        height: .6rem;
+    }
+}

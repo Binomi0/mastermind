@@ -1,0 +1,14 @@
+.game-finish {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+button.finish-button {
+    color: blue;
+    background: lightblue;
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 30px;
+}
