@@ -105,13 +105,38 @@ export default class MainGame extends Component {
   }
 
   componentWillMount() {
-    setKeyHandlers(() => {
-      if (this.state.turnFilled) {
-        this.handleValidate(this.state.activeColumn);
-      }
+    this.setState({ ...initState, ...this.context }, () => {
+      const { activeColumn } = this.state;
+      setKeyHandlers((key) => {
+        switch (key) {
+          case 'Enter':
+            this.handleValidate(activeColumn);
+            break;
+          case '1':
+            this.setMovement('red');
+            break;
+          case '2':
+            this.setMovement('yellow');
+            break;
+          case '3':
+            this.setMovement('blue');
+            break;
+          case '4':
+            this.setMovement('green');
+            break;
+          case '5':
+            this.setMovement('purple');
+            break;
+          default:
+            break;
+        }
+      });
     });
-    this.setState({ ...initState, ...this.context });
   }
+
+  setMovement = (color) => {
+    this.handleSetColor(color);
+  };
 
   handleSetColor = (color) => {
     const { activeColumn, movement, itemColors } = this.state;

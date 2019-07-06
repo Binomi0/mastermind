@@ -16,6 +16,10 @@ export default class Header extends Component {
             <div className="header">
               <h1>MasterMind Game</h1>
               <h2>Puntuación: {scoreManager.score}</h2>
+              <p>
+                Pulsa los números para seleccionar un color y Enter para validar
+                la jugada.
+              </p>
               {/* <div
               className="selected-color"
               style={{ background: selectedColor }}
