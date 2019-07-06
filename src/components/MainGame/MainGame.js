@@ -199,7 +199,6 @@ export default class MainGame extends Component {
   render() {
     const { gameWin, gameLost } = this.state;
 
-    console.log('this.scoreManager', this.scoreManager);
     const context = {
       ...this.state,
       scoreManager: this.scoreManager,
