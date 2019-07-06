@@ -9,7 +9,7 @@ class ScoreManager {
 
   getScore() {
     const score = parseInt(localStorage.getItem('mmScore'));
-    console.log('score', score);
+    // console.log('score', score);
     this.score = score;
     return this.score;
   }

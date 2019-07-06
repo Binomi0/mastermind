@@ -1,4 +1,4 @@
-export const isRowFilled = (turn) => !turn.some((filled) => filled === 0);
+export const isRowFilled = (turn) => !turn.some((filled) => filled === '');
 
 export const getMatch = (turn, result) => {
   let exactMatches = [];

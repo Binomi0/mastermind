@@ -117,22 +117,35 @@ export default class MainGame extends Component {
     const { activeColumn, movement, turn, itemColors } = this.state;
 
     if (movement / activeColumn > 4) {
-      this.handleValidate(activeColumn);
       return;
     }
 
-    this.setState({
-      selectedColor: color,
-      itemColors: {
-        ...itemColors,
-        [activeColumn]: {
-          ...itemColors[activeColumn],
-          [movement]: color,
+    this.setState(
+      {
+        selectedColor: color,
+        itemColors: {
+          ...itemColors,
+          [activeColumn]: {
+            ...itemColors[activeColumn],
+            [movement]: color,
+          },
         },
+        turn,
+        movement: movement + 1,
       },
-      turn,
-      movement: movement + 1,
-    });
+      this.handleTurn,
+    );
+  };
+
+  handleTurn = () => {
+    const { activeColumn, itemColors } = this.state;
+    const turn = Object.values(itemColors[activeColumn]);
+    const isRowFilled = validations.isRowFilled(turn);
+    if (!isRowFilled) {
+      this.setState({ turnFilled: false });
+    } else {
+      this.setState({ turnFilled: true });
+    }
   };
 
   handleValidate = () => {
@@ -175,7 +188,7 @@ export default class MainGame extends Component {
 
     this.scoreManager.setScore(newScore);
 
-    console.log('this.scoreManager', this.scoreManager);
+    // console.log('this.scoreManager', this.scoreManager);
 
     this.setState({
       validation: {

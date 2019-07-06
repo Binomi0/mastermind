@@ -6,7 +6,7 @@ export default class Record extends Component {
 
     return (
       <li>
-        {player}: {score.getScore()}
+        {player}: {score}
       </li>
     );
   }
