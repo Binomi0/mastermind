@@ -54,10 +54,13 @@ export default class GameFinish extends Component {
   render() {
     return (
       <GameContext.Consumer>
-        {({ scoreManager, resetGame }) => (
+        {({ scoreManager, resetGame, gameElapsed, activeColumn }) => (
           <div className="game-finish">
             <h1>Has Ganado!</h1>
-            <p>¡Has conseguido {scoreManager.getScore()} puntos!</p>
+            <p>
+              ¡Has conseguido {scoreManager.getScore()} puntos, en {gameElapsed}{' '}
+              segundos y {activeColumn} columnas!
+            </p>
             <button className="finish-button" onClick={resetGame}>
               Jugar otra vez
             </button>

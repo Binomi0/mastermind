@@ -10,12 +10,14 @@ export default class Header extends Component {
     // console.log('this.context', this.context);
     return (
       <GameContext.Consumer>
-        {({ selectedColor, scoreManager }) => {
+        {({ selectedColor, scoreManager, gameElapsed }) => {
           // console.log('score', scoreManager.score);
           return (
             <div className="header">
               <h1>MasterMind Game</h1>
-              <h2>Puntuación: {scoreManager.score}</h2>
+              <h2>
+                Puntuación: {scoreManager.score} - Tiempo: {gameElapsed}
+              </h2>
               <p>
                 Pulsa los números para seleccionar un color y Enter para validar
                 la jugada.

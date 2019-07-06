@@ -15,7 +15,10 @@ const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
 const initState = {
   selectedColor: 'white',
   movement: 1,
+  gameElapsed: 0,
+  bonus: 100000,
   activeColumn: 1,
+  gameStarted: false,
   gameWin: false,
   gameLost: false,
   turnFilled: false,
@@ -134,11 +137,29 @@ export default class MainGame extends Component {
     });
   }
 
+  componentWillUnmount() {
+    clearInterval(this.gameTimer);
+  }
+
   setMovement = (color) => {
     this.handleSetColor(color);
   };
 
   handleSetColor = (color) => {
+    if (!this.state.gameStarted) {
+      this.setState({ gameStarted: true });
+      let timer = 0;
+      this.gameTimer = setInterval(() => {
+        timer += 1;
+        if (this.state.bonus > 0) {
+          const penalization = 1000;
+          this.setState({
+            bonus: this.state.bonus - penalization,
+            gameElapsed: timer,
+          });
+        }
+      }, 1000);
+    }
     const { activeColumn, movement, itemColors } = this.state;
 
     if (movement / activeColumn > 4) {
@@ -162,6 +183,7 @@ export default class MainGame extends Component {
   };
 
   handleTurn = () => {
+    console.log('this.state.bonus', this.state.bonus);
     const { activeColumn, itemColors } = this.state;
     const turn = Object.values(itemColors[activeColumn]);
     const isRowFilled = validations.isRowFilled(turn);
@@ -192,8 +214,9 @@ export default class MainGame extends Component {
     // 4 items are equal to 2 so player wins
     if (gameFinish.length === 4) {
       console.log('Game Over! Player Wins! => gameFinish.length === 4');
-      this.scoreManager.setScore(500);
+      this.scoreManager.setScore(this.state.bonus);
       this.setState({ gameWin: true });
+      clearInterval(this.gameTimer);
       return;
     }
 
@@ -231,6 +254,7 @@ export default class MainGame extends Component {
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((item) => {
       localStorage.removeItem(`item-${item}`);
     });
+    clearInterval(this.gameTimer);
   };
 
   setUserSelectedMovement = (item, column) => {
