@@ -21,8 +21,8 @@ export default class Column extends Component {
                   <Ficha
                     isColumnActive={isColumnActive}
                     key={row}
-                    column={column}
-                    itemIndex={row}
+                    column={Number(column)}
+                    itemIndex={Number(row)}
                   />
                 ))
                 .reverse()}

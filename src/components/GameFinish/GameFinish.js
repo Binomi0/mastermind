@@ -24,12 +24,12 @@ export default class GameFinish extends Component {
     if (!this.state.playerName) {
       return;
     }
-    const { score } = this.context;
+    const { scoreManager } = this.context;
 
     let records = JSON.parse(localStorage.getItem('mm-records')) || [];
     const newRecord = {
       player: this.state.playerName,
-      score: score.getScore(),
+      score: scoreManager.getScore(),
     };
 
     if (isEmpty(records)) {
@@ -54,10 +54,10 @@ export default class GameFinish extends Component {
   render() {
     return (
       <GameContext.Consumer>
-        {({ score, resetGame }) => (
+        {({ scoreManager, resetGame }) => (
           <div className="game-finish">
             <h1>Has Ganado!</h1>
-            <p>¡Has conseguido {score} puntos!</p>
+            <p>¡Has conseguido {scoreManager.getScore()} puntos!</p>
             <button className="finish-button" onClick={resetGame}>
               Jugar otra vez
             </button>

@@ -7,6 +7,11 @@ import './ficha.css';
 export default class Ficha extends Component {
   static contextType = GameContext;
 
+  handleClick = () => {
+    const { itemIndex, column } = this.props;
+    this.context.setUserSelectedMovement(itemIndex, column);
+  };
+
   render() {
     const { itemIndex, column, isColumnActive } = this.props;
     const { movement } = this.context;

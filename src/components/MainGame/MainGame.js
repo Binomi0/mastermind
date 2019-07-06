@@ -114,7 +114,7 @@ export default class MainGame extends Component {
   }
 
   handleSetColor = (color) => {
-    const { activeColumn, movement, turn, itemColors } = this.state;
+    const { activeColumn, movement, itemColors } = this.state;
 
     if (movement / activeColumn > 4) {
       return;
@@ -130,7 +130,6 @@ export default class MainGame extends Component {
             [movement]: color,
           },
         },
-        turn,
         movement: movement + 1,
       },
       this.handleTurn,
@@ -203,10 +202,17 @@ export default class MainGame extends Component {
   resetGame = () => {
     this.state.resetGame();
     this.setState(initState);
-    // this.setState({ ...initState, result: this.context.result });
+    this.scoreManager = new ScoreManager(0);
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((item) => {
       localStorage.removeItem(`item-${item}`);
     });
+  };
+
+  setUserSelectedMovement = (item, column) => {
+    if (column === this.state.activeColumn) {
+      this.setState({ movement: item });
+      // this.setState({ userSelectedMovement: { column, item } });
+    }
   };
 
   render() {
@@ -219,6 +225,7 @@ export default class MainGame extends Component {
       handleSetColor: this.handleSetColor,
       resetGame: this.resetGame,
       selectedItemRef: this.selectedItemRef,
+      setUserSelectedMovement: this.setUserSelectedMovement,
     };
 
     return (
