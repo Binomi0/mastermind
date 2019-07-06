@@ -1,26 +1,23 @@
-import React, { Component } from 'react';
+import React, { memo } from 'react';
+import { GameContext } from '../../context/game';
 
-export default class Seleccionable extends Component {
-  constructor(props) {
-    super(props);
-    this.fichaRef = React.createRef();
-  }
+const Seleccionable = memo(function Seleccionable({ color, index }) {
+  const fichaRef = React.createRef();
 
-  handleClick = () => {
-    // console.log('this.fichaRef', this.fichaRef.current);
-    const { changeColor, color } = this.props;
-    changeColor(color);
-    this.setState({ color });
-  };
+  return (
+    <GameContext.Consumer>
+      {({ changeColor }) => (
+        <div
+          ref={fichaRef}
+          onClick={() => changeColor(color)}
+          className="ficha-seleccionable"
+          style={{ background: color }}
+        >
+          {index}
+        </div>
+      )}
+    </GameContext.Consumer>
+  );
+});
 
-  render() {
-    return (
-      <div
-        ref={this.fichaRef}
-        onClick={this.handleClick}
-        className="ficha-seleccionable"
-        style={{ background: this.props.color }}
-      />
-    );
-  }
-}
+export default Seleccionable;

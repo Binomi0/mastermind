@@ -5,9 +5,9 @@ export default class Record extends Component {
     const { player, score } = this.props.record;
 
     return (
-      <div>
+      <li>
         {player}: {score}
-      </div>
+      </li>
     );
   }
 }

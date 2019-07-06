@@ -5,45 +5,33 @@ import Records from '../Records';
 import './dashboard.css';
 
 export default class Dashboard extends Component {
-  state = { showRecords: true };
+  static contextType = GameContext;
 
-  handleNewGame = (resetGame) => {
+  state = { showRecords: false };
+
+  handleNewGame = () => {
     this.props.setGame(1);
     // console.log('this.context', this.context);
     this.context.resetGame();
   };
 
   handleShowRecords = () => {
-    this.setState({ showRecords: true });
+    this.setState(({ showRecords }) => ({ showRecords: !showRecords }));
   };
 
   render() {
-    // console.log('this.props', this.props);
-    // console.log('this.context', this.context);
     return (
-      <GameContext.Consumer>
-        {(game) => {
-          console.log('game', game.resetGame());
-          return (
-            <div className="dashboard">
-              <h1>MasterMind Game</h1>
-              <button className="new-game-button" onClick={this.handleNewGame}>
-                Nueva Partida
-              </button>
-              <hr />
-              <button
-                className="new-game-button"
-                onClick={this.handleShowRecords}
-              >
-                Records
-              </button>
-              {this.state.showRecords && <Records />}
-            </div>
-          );
-        }}
-      </GameContext.Consumer>
+      <div className="dashboard">
+        <h1>MasterMind Game</h1>
+        <button className="new-game-button" onClick={this.handleNewGame}>
+          Nueva Partida
+        </button>
+        <hr />
+        <button className="new-game-button" onClick={this.handleShowRecords}>
+          Records
+        </button>
+        {this.state.showRecords && <Records />}
+      </div>
     );
   }
 }
-
-Dashboard.contextType = GameContext;

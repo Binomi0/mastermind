@@ -1,35 +1,57 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
+
 import { GameContext } from '../../context/game';
 
 import './ficha.css';
 
 export default class Ficha extends Component {
+  static contextType = GameContext;
+
   constructor(props) {
     super(props);
+
+    this.itemRef = createRef();
+    this.context = GameContext;
     this.state = {
-      color: props.color,
+      color: this.context.selectedColor,
     };
   }
 
-  handleClick = () => {
-    const { selectedColor: color, item, columnActive } = this.props;
+  componentDidMount() {
+    // console.log('this.context', this.context);
+  }
 
-    if (columnActive) {
+  handleClick = () => {
+    console.log('this.refs', this.itemRef.current);
+    const { column, itemIndex, isColumnActive } = this.props;
+    const { selectedColor: color, setTurn } = this.context;
+
+    if (isColumnActive) {
       this.setState({ color }, () => {
-        this.props.selectColor(color, item);
+        setTurn(itemIndex, Number(column));
       });
     }
   };
 
   render() {
+    const { itemIndex, column, isColumnActive } = this.props;
+    const { movement } = this.context;
+
+    const active = itemIndex === movement && isColumnActive;
+
     return (
       <GameContext.Consumer>
-        {() => (
+        {({ movement }) => (
           <div
+            ref={this.itemRef}
             onClick={this.handleClick}
-            className="ficha"
+            className={`ficha ficha-${itemIndex} column-${column}${
+              active ? ' active' : ''
+            }`}
             style={{ background: this.state.color }}
-          />
+          >
+            <div className="ficha-point" />
+          </div>
         )}
       </GameContext.Consumer>
     );

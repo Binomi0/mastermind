@@ -1,23 +1,28 @@
-import React, { Component } from 'react';
+import React, { memo } from 'react';
 
+import { colors } from '../../utils/constants';
 import Seleccionable from '../Seleccionable/Seleccionable';
-import './seleccionable.css';
+import { GameContext } from '../../context/game';
 
-export default class Seleccionables extends Component {
-  render() {
-    const { changeColor, colors } = this.props;
-    return (
-      <div className="seleccionable">
-        <div className="fichas">
-          {colors.map((color) => (
-            <Seleccionable
-              changeColor={changeColor}
-              key={color}
-              color={color}
-            />
-          ))}
+import './seleccionable.scss';
+
+const Seleccionables = memo(function Seleccionables() {
+  return (
+    <GameContext.Consumer>
+      {({ handleValidate, turnFilled }) => (
+        <div className="seleccionable">
+          <div className="fichas">
+            {Object.keys(colors).map((color, index) => (
+              <Seleccionable key={color} color={color} index={index} />
+            ))}
+            <button disabled={!turnFilled} onClick={handleValidate}>
+              Validar jugada
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }
-}
+      )}
+    </GameContext.Consumer>
+  );
+});
+
+export default Seleccionables;
