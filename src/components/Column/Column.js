@@ -7,22 +7,25 @@ import './column.css';
 
 export default class Column extends Component {
   render() {
-    const { isColumnActive, column, selectedItemRef } = this.props;
+    const { isColumnActive, column } = this.props;
+
+    // console.log('Column => column', column);
 
     return (
       <GameContext.Consumer>
-        {() => (
-          <div className="tablero-columna">
+        {({ itemColors }) => (
+          <div className="column-item">
             <div className={isColumnActive ? 'column-active' : ''}>
-              {[0, 1, 2, 3].map((row) => (
-                <Ficha
-                  selectedItemRef={selectedItemRef}
-                  isColumnActive={isColumnActive}
-                  key={row}
-                  column={column}
-                  itemIndex={row}
-                />
-              ))}
+              {Object.keys(itemColors[column])
+                .map((row) => (
+                  <Ficha
+                    isColumnActive={isColumnActive}
+                    key={row}
+                    column={column}
+                    itemIndex={row}
+                  />
+                ))
+                .reverse()}
             </div>
           </div>
         )}

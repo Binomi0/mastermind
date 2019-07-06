@@ -1,6 +1,5 @@
 import React, { Component, lazy, createRef, Suspense } from 'react';
 
-import './main-game.scss';
 import TableroJuego from '../TableroJuego/TableroJuego';
 import Seleccionables from '../Seleccionables/Seleccionables';
 import Header from '../Header/Header';
@@ -8,55 +7,188 @@ import Validations from '../Validations/Validations';
 import { GameContext } from '../../context/game';
 import * as validations from '../../utils/validations';
 import { setKeyHandlers } from '../../utils/handlers';
+import './main-game.scss';
+import ScoreManager from '../../utils/ScoreManager';
 
 const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
 
 const initState = {
   selectedColor: 'white',
-  result: [],
-  activeColumn: 0,
-  turn: [0, 0, 0, 0],
+  movement: 1,
+  activeColumn: 1,
   gameWin: false,
   gameLost: false,
-  score: 0,
+  turnFilled: false,
+  itemColors: {
+    1: {
+      1: '',
+      2: '',
+      3: '',
+      4: '',
+    },
+    2: {
+      5: '',
+      6: '',
+      7: '',
+      8: '',
+    },
+    3: {
+      9: '',
+      10: '',
+      11: '',
+      12: '',
+    },
+    4: {
+      13: '',
+      14: '',
+      15: '',
+      16: '',
+    },
+    5: {
+      17: '',
+      18: '',
+      19: '',
+      20: '',
+    },
+    6: {
+      21: '',
+      22: '',
+      23: '',
+      24: '',
+    },
+    7: {
+      25: '',
+      26: '',
+      27: '',
+      28: '',
+    },
+    8: {
+      29: '',
+      30: '',
+      31: '',
+      32: '',
+    },
+    9: {
+      33: '',
+      34: '',
+      35: '',
+      36: '',
+    },
+    10: {
+      37: '',
+      38: '',
+      39: '',
+      40: '',
+    },
+  },
   validation: {
-    0: [],
-    1: [],
-    2: [],
-    3: [],
-    4: [],
-    5: [],
-    6: [],
-    7: [],
-    8: [],
-    9: [],
+    1: [0, 0, 0, 0],
+    2: [0, 0, 0, 0],
+    3: [0, 0, 0, 0],
+    4: [0, 0, 0, 0],
+    5: [0, 0, 0, 0],
+    6: [0, 0, 0, 0],
+    7: [0, 0, 0, 0],
+    8: [0, 0, 0, 0],
+    9: [0, 0, 0, 0],
+    10: [0, 0, 0, 0],
   },
 };
-export default class MainGame extends Component {
-  constructor() {
-    super();
 
+export default class MainGame extends Component {
+  constructor(props) {
+    super(props);
+
+    this.scoreManager = new ScoreManager(0);
+    this.state = { game: props.game };
     this.selectedItemRef = createRef();
   }
 
   componentWillMount() {
     setKeyHandlers(() => {
       if (this.state.turnFilled) {
-        this.handleValidate(this.context.activeColumn);
-        console.log('has presionado enter');
-      } else {
-        console.log('ojet');
+        this.handleValidate(this.state.activeColumn);
       }
     });
-    this.setState({ ...this.context, turnFilled: false });
+    this.setState({ ...initState, ...this.context });
   }
 
-  changeColor = (selectedColor) => {
-    this.setState({ selectedColor });
+  handleSetColor = (color) => {
+    const { activeColumn, movement, turn, itemColors } = this.state;
+
+    if (movement / activeColumn > 4) {
+      this.handleValidate(activeColumn);
+      return;
+    }
+
+    this.setState({
+      selectedColor: color,
+      itemColors: {
+        ...itemColors,
+        [activeColumn]: {
+          ...itemColors[activeColumn],
+          [movement]: color,
+        },
+      },
+      turn,
+      movement: movement + 1,
+    });
+  };
+
+  handleValidate = () => {
+    const { result, activeColumn, itemColors, validation } = this.state;
+
+    const turn = Object.values(itemColors[activeColumn]);
+    const isRowFilled = validations.isRowFilled(turn);
+
+    // Any of the items are not colured
+    if (!isRowFilled) {
+      console.log('At least one item is not coloured.');
+      return;
+    }
+
+    const match = validations.getMatch(turn, result);
+
+    // Fills `gameFinish` list with matched results identified with number 2
+    const gameFinish = match.filter((item) => item === 2);
+
+    // 4 items are equal to 2 so player wins
+    if (gameFinish.length === 4) {
+      console.log('Game Over! Player Wins! => gameFinish.length === 4');
+      this.scoreManager.setScore(500);
+      this.setState({ gameWin: true });
+      return;
+    }
+
+    // Last column was filled so game over
+    if (activeColumn === 9) {
+      console.log('activeColumn === 9');
+      this.setState({ gameLost: true });
+      return;
+    }
+
+    const newScore = validations.setGameScore(
+      match,
+      activeColumn,
+      this.scoreManager.getScore(),
+    );
+
+    this.scoreManager.setScore(newScore);
+
+    console.log('this.scoreManager', this.scoreManager);
+
+    this.setState({
+      validation: {
+        ...validation,
+        [activeColumn]: match,
+      },
+      activeColumn: this.state.activeColumn + 1,
+      turnFilled: false,
+    });
   };
 
   resetGame = () => {
-    this.context.resetGame();
+    this.state.resetGame();
     this.setState(initState);
     // this.setState({ ...initState, result: this.context.result });
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((item) => {
@@ -64,84 +196,15 @@ export default class MainGame extends Component {
     });
   };
 
-  handleValidate = (column) => {
-    const { turn, result, activeColumn, score } = this.state;
-    const match = validations.getMatch(turn, result);
-
-    // Fills `gameFinish` list with matched results identified with number 2
-    const gameFinish = match.filter((item) => item === 2);
-
-    // Any of the items are not colured
-    if (turn.includes(0)) {
-      console.log('turn.includes(0)');
-      return;
-    }
-
-    // 4 items are equal to 2 so player wins
-    if (gameFinish.length === 4) {
-      console.log('gameFinish.length === 4');
-      this.setState({ gameWin: true, score: score + 500 });
-      return;
-    }
-
-    // Last column was filled so game over
-    if (column === 9) {
-      console.log('column === 9');
-      this.setState({ gameLost: true });
-      return;
-    }
-
-    this.setState(
-      {
-        validation: {
-          ...this.state.validation,
-          [column]: match,
-        },
-      },
-      async () => {
-        const isRowFilled = validations.isRowFilled(turn);
-        if (isRowFilled) {
-          const newScore = await validations.setGameScore(
-            match,
-            activeColumn,
-            score,
-          );
-
-          this.setState({
-            activeColumn: this.state.activeColumn + 1,
-            turn: [0, 0, 0, 0],
-            score: newScore,
-            turnFilled: false,
-          });
-        }
-      },
-    );
-  };
-
-  setTurn = (item, column) => {
-    console.log('column', column);
-    // item.removeClass('active');
-    const { turn, selectedColor } = this.state;
-
-    turn[item] = selectedColor;
-
-    this.setState({ turn }, () => {
-      if (!turn.includes(0)) {
-        this.setState({ turnFilled: true });
-      } else {
-        this.setState({ turnFilled: false });
-      }
-    });
-  };
-
   render() {
     const { gameWin, gameLost } = this.state;
 
+    console.log('this.scoreManager', this.scoreManager);
     const context = {
       ...this.state,
-      setTurn: this.setTurn,
+      scoreManager: this.scoreManager,
       handleValidate: this.handleValidate,
-      changeColor: this.changeColor,
+      handleSetColor: this.handleSetColor,
       resetGame: this.resetGame,
       selectedItemRef: this.selectedItemRef,
     };

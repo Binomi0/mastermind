@@ -12,7 +12,7 @@ function App() {
     <GameContext.Provider value={GameContext._currentValue}>
       <div className="App">
         {game === 0 && <Dashboard setGame={setGame} />}
-        {game > 0 && <MainGame settings={game} />}
+        {game > 0 && <MainGame game={game} />}
       </div>
     </GameContext.Provider>
   );

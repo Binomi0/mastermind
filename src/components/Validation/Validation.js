@@ -1,15 +1,13 @@
 import React, { PureComponent } from 'react';
 
-import './validation.css';
+import './validation.scss';
 
 export default class Validation extends PureComponent {
   render() {
-    const { validItems, onClick, active } = this.props;
+    const { validItems } = this.props;
+    // console.log('validItems', validItems);
     return (
-      <div
-        className={`validation-group${active ? '-hover' : ''}`}
-        onClick={onClick}
-      >
+      <div className="validation-group">
         <div className="columna">
           {[0, 1].map((item) => (
             <div

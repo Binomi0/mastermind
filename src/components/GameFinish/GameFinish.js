@@ -29,7 +29,7 @@ export default class GameFinish extends Component {
     let records = JSON.parse(localStorage.getItem('mm-records')) || [];
     const newRecord = {
       player: this.state.playerName,
-      score,
+      score: score.getScore(),
     };
 
     if (isEmpty(records)) {

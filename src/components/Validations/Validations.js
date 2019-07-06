@@ -8,16 +8,17 @@ import './validations.css';
 const Validations = memo(function Validations() {
   return (
     <GameContext.Consumer>
-      {({ activeColumn, validation, handleValidate }) => (
+      {({ activeColumn, validation }) => (
         <div className="tablero-juego validations">
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((column) => (
-            <Validation
-              key={column}
-              validItems={validation[column]}
-              active={activeColumn === column}
-              onClick={() => handleValidate(activeColumn)}
-            />
-          ))}
+          {Object.keys(validation)
+            .map((column) => (
+              <Validation
+                key={column}
+                validItems={validation[column]}
+                active={activeColumn === column}
+              />
+            ))
+            .reverse()}
         </div>
       )}
     </GameContext.Consumer>

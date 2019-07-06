@@ -13,7 +13,7 @@ const Seleccionables = memo(function Seleccionables() {
         <div className="seleccionable">
           <div className="fichas">
             {Object.keys(colors).map((color, index) => (
-              <Seleccionable key={color} color={color} index={index} />
+              <Seleccionable key={color} color={color} index={index + 1} />
             ))}
             <button disabled={!turnFilled} onClick={handleValidate}>
               Validar jugada

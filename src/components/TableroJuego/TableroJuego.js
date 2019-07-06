@@ -4,19 +4,20 @@ import Column from '../Column/Column';
 import './tablero-juego.css';
 import { GameContext } from '../../context/game';
 
-const TableroJuego = memo(function TableroJuego({ selectedItemRef }) {
+const TableroJuego = memo(function TableroJuego() {
   return (
     <GameContext.Consumer>
-      {({ activeColumn }) => (
+      {({ activeColumn, itemColors }) => (
         <div className="tablero-juego">
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((columnIndex) => (
-            <Column
-              selectedItemRef={selectedItemRef}
-              key={columnIndex}
-              column={columnIndex}
-              isColumnActive={activeColumn === columnIndex}
-            />
-          ))}
+          {Object.keys(itemColors)
+            .map((columnIndex) => (
+              <Column
+                key={columnIndex}
+                column={columnIndex}
+                isColumnActive={activeColumn === Number(columnIndex)}
+              />
+            ))
+            .reverse()}
         </div>
       )}
     </GameContext.Consumer>
