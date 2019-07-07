@@ -1,0 +1,40 @@
+.seleccionable {
+    margin: 1rem;
+
+    .fichas {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        button {
+            margin-left: 3rem;
+        }
+    }
+}
+
+.ficha-seleccionable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 1.5rem;
+}
+
+button {
+    background: transparent;
+    border: 1px solid lightblue;
+    color: lightblue;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    text-transform: uppercase;
+
+    &:active {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    &:disabled {
+        background: rgb(32, 32, 41);
+        color: rgba(255, 255, 255, 0.3);
+    }
+}

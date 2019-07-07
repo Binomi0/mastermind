@@ -1,35 +1,35 @@
 import React, { Component } from 'react';
+
 import { GameContext } from '../../context/game';
 
 import './ficha.css';
 
 export default class Ficha extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      color: props.color,
-    };
-  }
+  static contextType = GameContext;
 
   handleClick = () => {
-    const { selectedColor: color, item, columnActive } = this.props;
-
-    if (columnActive) {
-      this.setState({ color }, () => {
-        this.props.selectColor(color, item);
-      });
-    }
+    const { itemIndex, column } = this.props;
+    this.context.setUserSelectedMovement(itemIndex, column);
   };
 
   render() {
+    const { itemIndex, column, isColumnActive } = this.props;
+    const { movement } = this.context;
+
+    const active = itemIndex <= movement && isColumnActive;
+
     return (
       <GameContext.Consumer>
-        {() => (
+        {({ itemColors }) => (
           <div
             onClick={this.handleClick}
-            className="ficha"
-            style={{ background: this.state.color }}
-          />
+            className={`ficha ficha-${itemIndex} column-${column}${
+              active ? ' active' : ''
+            }`}
+            style={{ background: itemColors[column][itemIndex] }}
+          >
+            <div className="ficha-point" />
+          </div>
         )}
       </GameContext.Consumer>
     );

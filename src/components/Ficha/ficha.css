@@ -1,17 +1,20 @@
 .ficha {
     cursor: pointer;
-    width: 5rem;
-    height: 5rem;
+    width: 3rem;
+    height: 3rem;
     margin: .5rem;
-    background: white;
+    background: transparent;
     border-radius: 50%;
     border: 1px solid burlywood;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .ficha-seleccionable {
     cursor: pointer;
-    width: 6rem;
-    height: 6rem;
+    width: 3rem;
+    height: 3rem;
     margin: .5rem;
     background: white;
     border-radius: 50%;
@@ -21,6 +24,19 @@
 .question {
     color: red;
     font-size: 30px;
+}
+
+.ficha-point {
+    width: 1.8rem;
+    height: 1.8rem;
+    transform: scale(1, 1);
+    transition: all 300ms;
+    background: black;
+    background: rgba(0, 0, 0, 0);
+}
+.ficha-point:hover {
+    transform: scale(0, 0);
+
 }
 
 @media screen and (max-width: 768px) {

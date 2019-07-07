@@ -1,15 +1,19 @@
-export const isRowFilled = (turn) => !turn.some((filled) => filled === 0);
+const PERFECT_MATCH = 2;
+const PARTIAL_MATCH = 1;
+
+export const isRowFilled = (turn) => !turn.some((filled) => filled === '');
 
 export const getMatch = (turn, result) => {
   let exactMatches = [];
-  turn.forEach((match, i) => {
+  const newTurn = Object.values(turn);
+  newTurn.forEach((match, i) => {
     if (match === result[i]) {
       exactMatches.push(match);
     }
   });
 
   let partialMatches = [];
-  turn.forEach((match, i) => {
+  newTurn.forEach((match) => {
     if (
       result.indexOf(match) > -1 &&
       !partialMatches.includes(match) &&
@@ -21,21 +25,23 @@ export const getMatch = (turn, result) => {
 
   let matches = [];
   exactMatches.forEach((item) => {
-    matches.push(2);
+    matches.push(PERFECT_MATCH);
   });
   partialMatches.forEach((item) => {
-    matches.push(1);
+    matches.push(PARTIAL_MATCH);
   });
 
   return matches;
 };
 
-export const setGameScore = (match, index, lastScore) => {
-  localStorage.setItem(`turn-${index}`, JSON.stringify(match));
-  let score = 0;
+export const setGameScore = (match, column, timeElapsed) => {
+  const maxScore = 1000;
+
+  const score = maxScore / column / timeElapsed;
+  let partialScore = PARTIAL_MATCH;
   if (match.length) {
-    score = match.reduce((a, b) => a + b, score);
-    score = score * (10 - index);
+    partialScore = match.reduce((a, b) => a + b, partialScore);
   }
-  return Promise.resolve(score + lastScore);
+  console.log('partialScore', partialScore);
+  return Math.floor(parseInt(score * partialScore, 10));
 };

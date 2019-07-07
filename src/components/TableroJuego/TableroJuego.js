@@ -1,22 +1,27 @@
-import React, { Component } from 'react';
+import React, { memo } from 'react';
 
 import Column from '../Column/Column';
 import './tablero-juego.css';
+import { GameContext } from '../../context/game';
 
-export default class TableroJuego extends Component {
-  render() {
-    const { active, selectColor } = this.props;
-    return (
-      <div className="tablero-juego">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((column) => (
-          <Column
-            key={column}
-            selectColor={selectColor}
-            active={active === column}
-            selectedColor={this.props.selectedColor}
-          />
-        ))}
-      </div>
-    );
-  }
-}
+const TableroJuego = memo(function TableroJuego() {
+  return (
+    <GameContext.Consumer>
+      {({ activeColumn, itemColors }) => (
+        <div className="tablero-juego">
+          {Object.keys(itemColors)
+            .map((columnIndex) => (
+              <Column
+                key={columnIndex}
+                column={columnIndex}
+                isColumnActive={activeColumn === Number(columnIndex)}
+              />
+            ))
+            .reverse()}
+        </div>
+      )}
+    </GameContext.Consumer>
+  );
+});
+
+export default TableroJuego;

@@ -20,6 +20,6 @@ function shuffle(array) {
   return array;
 }
 
-export default () => {
-  return shuffle(Object.keys(colors)).slice(0, 4);
+export default (items) => {
+  return shuffle(Object.keys(colors)).slice(0, items);
 };
