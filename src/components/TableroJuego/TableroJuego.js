@@ -9,15 +9,13 @@ const TableroJuego = memo(function TableroJuego() {
     <GameContext.Consumer>
       {({ activeColumn, itemColors }) => (
         <div className="tablero-juego">
-          {Object.keys(itemColors)
-            .map((columnIndex) => (
-              <Column
-                key={columnIndex}
-                column={columnIndex}
-                isColumnActive={activeColumn === Number(columnIndex)}
-              />
-            ))
-            .reverse()}
+          {Object.keys(itemColors).map((columnIndex) => (
+            <Column
+              key={columnIndex}
+              column={columnIndex}
+              isColumnActive={activeColumn === Number(columnIndex)}
+            />
+          ))}
         </div>
       )}
     </GameContext.Consumer>

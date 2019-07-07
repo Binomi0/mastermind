@@ -10,15 +10,13 @@ const Validations = memo(function Validations() {
     <GameContext.Consumer>
       {({ activeColumn, validation }) => (
         <div className="tablero-juego validations">
-          {Object.keys(validation)
-            .map((column) => (
-              <Validation
-                key={column}
-                validItems={validation[column]}
-                active={activeColumn === column}
-              />
-            ))
-            .reverse()}
+          {Object.keys(validation).map((column) => (
+            <Validation
+              key={column}
+              validItems={validation[column]}
+              active={activeColumn === column}
+            />
+          ))}
         </div>
       )}
     </GameContext.Consumer>
