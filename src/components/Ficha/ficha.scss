@@ -1,8 +1,8 @@
 .ficha {
     cursor: pointer;
-    width: 3rem;
-    height: 3rem;
-    margin: .5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: .2rem;
     background: transparent;
     border-radius: 50%;
     border: 1px solid burlywood;
@@ -14,7 +14,6 @@
         width: 1.5rem;
         height: 1.5rem;
         margin: .1rem;
-        border: none;
     }
 }
 
@@ -26,22 +25,15 @@
     background: white;
     border-radius: 50%;
     border: 1px solid burlywood;
+
+    @media screen and (max-width: 640px) {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin: .2rem;
+    }
 }
 
 .question {
     color: red;
     font-size: 30px;
-}
-
-.ficha-point {
-    width: 1.8rem;
-    height: 1.8rem;
-    transform: scale(1, 1);
-    transition: all 300ms;
-    background: black;
-    background: rgba(0, 0, 0, 0);
-}
-
-.ficha-point:hover {
-    transform: scale(0, 0);
 }

@@ -27,9 +27,7 @@ export default class Ficha extends Component {
               active ? ' active' : ''
             }`}
             style={{ background: itemColors[column][itemIndex] }}
-          >
-            <div className="ficha-point" />
-          </div>
+          />
         )}
       </GameContext.Consumer>
     );
