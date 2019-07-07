@@ -16,16 +16,14 @@ export default class Column extends Component {
         {({ itemColors }) => (
           <div className="column-item">
             <div className={isColumnActive ? 'column-active' : ''}>
-              {Object.keys(itemColors[column])
-                .map((row) => (
-                  <Ficha
-                    isColumnActive={isColumnActive}
-                    key={row}
-                    column={Number(column)}
-                    itemIndex={Number(row)}
-                  />
-                ))
-                .reverse()}
+              {Object.keys(itemColors[column]).map((row) => (
+                <Ficha
+                  isColumnActive={isColumnActive}
+                  key={row}
+                  column={Number(column)}
+                  itemIndex={Number(row)}
+                />
+              ))}
             </div>
           </div>
         )}
