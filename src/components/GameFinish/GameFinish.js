@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { isEmpty } from 'lodash';
 
+import db from '../../config/firebase';
 import Records from '../Records';
 import './gameFinish.css';
 import { GameContext } from '../../context/game';
@@ -8,69 +8,41 @@ import { GameContext } from '../../context/game';
 export default class GameFinish extends Component {
   static contextType = GameContext;
 
-  state = {
-    playerName: '',
-  };
-
-  handleChange = (e) => {
-    e.preventDefault();
-
-    const { value } = e.target;
-    this.setState({ playerName: value });
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    if (!this.state.playerName) {
-      return;
-    }
+  componentDidMount() {
     const { scoreManager } = this.context;
 
-    let records = JSON.parse(localStorage.getItem('mm-records')) || [];
-    const newRecord = {
-      player: this.state.playerName,
-      score: scoreManager.getScore(),
-    };
+    console.log('this.context', this.context);
 
-    if (isEmpty(records)) {
-      records.push(newRecord);
-    }
-
-    const [playerExists] = records.filter(
-      (player) => player === this.state.playerName,
-    );
-    if (!playerExists) {
-      records.push(newRecord);
-    } else {
-      records.map((record) =>
-        record.player === this.state.playerName ? newRecord : record,
-      );
-    }
-
-    localStorage.setItem('mm-records', JSON.stringify(records));
-    this.setState({ playerName: '' });
-  };
+    const scoreRef = db.ref(`score/${this.context.playerName}`);
+    scoreRef.on('value', (snapshot) => {
+      if (snapshot.val().score < scoreManager.score) {
+        console.log('snapshot.val().score', snapshot.val().score);
+        console.log(
+          'this.context.scoreManager.score',
+          this.context.scoreManager.score,
+        );
+        alert('has superado tu record');
+        scoreRef.set(scoreManager);
+      }
+    });
+  }
 
   render() {
+    const { status } = this.props;
     return (
       <GameContext.Consumer>
-        {({ scoreManager, resetGame, gameElapsed, activeColumn }) => (
+        {({ scoreManager, resetGame, activeColumn, playerName }) => (
           <div className="game-finish">
-            <h1>Has Ganado!</h1>
+            {status === 'win' ? <h1>Has Ganado!</h1> : <h1>Has Perdido...</h1>}
+
             <p>
-              ¡Has conseguido {scoreManager.getScore()} puntos, en {gameElapsed}{' '}
-              segundos y {activeColumn} columnas!
+              ¡{playerName}, has conseguido {scoreManager.score} puntos, en{' '}
+              {scoreManager.time} segundos y {activeColumn} columnas!
             </p>
             <button className="finish-button" onClick={resetGame}>
               Jugar otra vez
             </button>
-            <div className="form">
-              <h2>Introduce tu nombre</h2>
-              <form onSubmit={this.handleSubmit}>
-                <input type="text" onChange={this.handleChange} />
-                <input type="submit" value="enviar" />
-              </form>
-            </div>
+
             <Records />
           </div>
         )}

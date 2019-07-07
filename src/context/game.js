@@ -8,6 +8,10 @@ const defaultGameContext = {
     this.result = rules(4);
     return this.result;
   },
+  playerName: '',
+  setPlayerName(playerName) {
+    this.playerName = playerName;
+  },
 };
 
 export const GameContext = React.createContext(defaultGameContext);

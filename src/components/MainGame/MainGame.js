@@ -8,15 +8,20 @@ import { GameContext } from '../../context/game';
 import * as validations from '../../utils/validations';
 import { setKeyHandlers } from '../../utils/handlers';
 import './main-game.scss';
-import ScoreManager from '../../utils/ScoreManager';
+// import ScoreManager from '../../utils/ScoreManager';
 
 const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
 
 const initState = {
   selectedColor: 'white',
+  scoreManager: {
+    score: 0,
+    player: '',
+    time: 0,
+  },
   movement: 1,
-  gameElapsed: 0,
-  bonus: 100000,
+  timeElapsed: 0,
+  bonus: 1000,
   activeColumn: 1,
   gameStarted: false,
   gameWin: false,
@@ -102,7 +107,7 @@ export default class MainGame extends Component {
   constructor(props) {
     super(props);
 
-    this.scoreManager = new ScoreManager(0);
+    this.context = GameContext;
     this.state = { game: props.game };
     this.selectedItemRef = createRef();
   }
@@ -152,10 +157,10 @@ export default class MainGame extends Component {
       this.gameTimer = setInterval(() => {
         timer += 1;
         if (this.state.bonus > 0) {
-          const penalization = 1000;
+          const penalization = 20;
           this.setState({
             bonus: this.state.bonus - penalization,
-            gameElapsed: timer,
+            timeElapsed: timer,
           });
         }
       }, 1000);
@@ -183,7 +188,6 @@ export default class MainGame extends Component {
   };
 
   handleTurn = () => {
-    console.log('this.state.bonus', this.state.bonus);
     const { activeColumn, itemColors } = this.state;
     const turn = Object.values(itemColors[activeColumn]);
     const isRowFilled = validations.isRowFilled(turn);
@@ -195,7 +199,14 @@ export default class MainGame extends Component {
   };
 
   handleValidate = () => {
-    const { result, activeColumn, itemColors, validation } = this.state;
+    const {
+      result,
+      activeColumn,
+      itemColors,
+      validation,
+      bonus,
+      timeElapsed,
+    } = this.state;
 
     const turn = Object.values(itemColors[activeColumn]);
     const isRowFilled = validations.isRowFilled(turn);
@@ -213,29 +224,42 @@ export default class MainGame extends Component {
 
     // 4 items are equal to 2 so player wins
     if (gameFinish.length === 4) {
-      console.log('Game Over! Player Wins! => gameFinish.length === 4');
-      this.scoreManager.setScore(this.state.bonus);
-      this.setState({ gameWin: true });
+      const newScore = validations.setGameScore(
+        gameFinish,
+        activeColumn,
+        timeElapsed,
+      );
+      this.setState({
+        gameWin: true,
+        scoreManager: {
+          score: newScore + bonus,
+          player: this.context.playerName,
+          time: timeElapsed,
+        },
+      });
       clearInterval(this.gameTimer);
       return;
     }
 
     // Last column was filled so game over
-    if (activeColumn === 9) {
-      console.log('activeColumn === 9');
-      this.setState({ gameLost: true });
+    if (activeColumn === 10) {
+      const newScore = validations.setGameScore(
+        match,
+        activeColumn,
+        timeElapsed,
+      );
+
+      this.setState({
+        gameLost: true,
+        scoreManager: {
+          score: newScore,
+          player: this.context.playerName,
+          time: timeElapsed,
+        },
+      });
+      clearInterval(this.gameTimer);
       return;
     }
-
-    const newScore = validations.setGameScore(
-      match,
-      activeColumn,
-      this.scoreManager.getScore(),
-    );
-
-    this.scoreManager.setScore(newScore);
-
-    // console.log('this.scoreManager', this.scoreManager);
 
     this.setState({
       validation: {
@@ -250,7 +274,6 @@ export default class MainGame extends Component {
   resetGame = () => {
     this.state.resetGame();
     this.setState(initState);
-    this.scoreManager = new ScoreManager(0);
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((item) => {
       localStorage.removeItem(`item-${item}`);
     });
@@ -269,7 +292,6 @@ export default class MainGame extends Component {
 
     const context = {
       ...this.state,
-      scoreManager: this.scoreManager,
       handleValidate: this.handleValidate,
       handleSetColor: this.handleSetColor,
       resetGame: this.resetGame,
@@ -282,7 +304,8 @@ export default class MainGame extends Component {
         <div className="tablero">
           {gameWin || gameLost ? (
             <Suspense fallback={<div />}>
-              <GameFinish />
+              {gameWin && <GameFinish status="win" />}
+              {gameLost && <GameFinish status="lost" />}
             </Suspense>
           ) : (
             <>
