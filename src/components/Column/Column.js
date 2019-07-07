@@ -14,8 +14,10 @@ export default class Column extends Component {
     return (
       <GameContext.Consumer>
         {({ itemColors }) => (
-          <div className="column-item">
-            <div className={isColumnActive ? 'column-active' : ''}>
+          <div className="column-group">
+            <div
+              className={`column-item${isColumnActive ? ' column-active' : ''}`}
+            >
               {Object.keys(itemColors[column]).map((row) => (
                 <Ficha
                   isColumnActive={isColumnActive}
@@ -25,6 +27,11 @@ export default class Column extends Component {
                 />
               ))}
             </div>
+            {isColumnActive && (
+              <span role="img" aria-label="arrow-up">
+                ⬆️
+              </span>
+            )}
           </div>
         )}
       </GameContext.Consumer>

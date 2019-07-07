@@ -1,45 +1,40 @@
-.validation-group, .validation-group-hover {
+.validation-group {
     display: flex;
     width: 2.4rem;
-    margin: auto;
     padding: 0;
     justify-content: space-between;
-}
 
-.validation-group-hover:hover {
-    background: grey;
-}
+    .validation-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-.columna {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
+        .validation-item {
+            width: 1rem;
+            height: 1rem;
+            margin: 0;
+            background: white;
+            border-radius: 50%;
+            border: 1px solid red;
+        }
 
-.validation-item {
-    width: 1rem;
-    height: 1rem;
-    margin: 0;
-    background: white;
-    border-radius: 50%;
-    border: 1px solid red;
-}
+        .item-1 {
+            background: red;
+        }
 
-.item-1 {
-    background: red;
-}
-
-.item-2 {
-    background: green;
-}
-
-@media screen and (max-width: 640px) {
-    .validation-group, .validation-group-hover {
-        width: 1.5rem;
+        .item-2 {
+            background: green;
+        }
     }
 
-    .validation-item {
-        width: .5rem;
-        height: .5rem;
+    @media screen and (max-width: 640px) {
+        width: 1.5rem;
+
+        .validation-column {
+            .validation-item {
+                width: .5rem;
+                height: .5rem;
+            }
+        }
     }
 }
