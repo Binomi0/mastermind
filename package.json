@@ -1,7 +1,7 @@
 {
-  "name": "mastermind",
-  "version": "0.1.0",
-  "private": true,
+  "name": "bino-mastermind-game",
+  "version": "0.0.1",
+  "private": false,
   "dependencies": {
     "firebase": "^6.2.4",
     "mastermind-ficha": "file:../modules/ficha",
@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && firebase deploy"
+    "deploy": "react-scripts build && firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
