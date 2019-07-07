@@ -7,6 +7,7 @@
     "mastermind-ficha": "file:../modules/ficha",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-dom-confetti": "^0.1.1",
     "react-scripts": "3.0.1"
   },
   "devDependencies": {

@@ -34,7 +34,7 @@ export const getMatch = (turn, result) => {
   return matches;
 };
 
-export const setGameScore = (match, column, timeElapsed) => {
+export const setGameScore = (match, column, timeElapsed, level) => {
   const maxScore = 1000;
 
   const score = maxScore / column / timeElapsed;
@@ -42,5 +42,5 @@ export const setGameScore = (match, column, timeElapsed) => {
   if (match.length) {
     partialScore = match.reduce((a, b) => a + b, partialScore);
   }
-  return Math.floor(parseInt(score * partialScore, 10));
+  return Math.floor(parseInt(score * partialScore * (level * 2), 10));
 };

@@ -6,13 +6,16 @@ import Dashboard from '../components/Dashboard/Dashboard';
 import './App.scss';
 
 function App() {
-  const [game, setGame] = React.useState(0);
+  const [gameStarted, setGameStarted] = React.useState(false);
 
   return (
     <GameContext.Provider value={GameContext._currentValue}>
       <div className="App">
-        {game === 0 && <Dashboard setGame={setGame} />}
-        {game > 0 && <MainGame game={game} />}
+        {!gameStarted ? (
+          <Dashboard setGameStarted={setGameStarted} />
+        ) : (
+          <MainGame game={gameStarted} />
+        )}
       </div>
     </GameContext.Provider>
   );

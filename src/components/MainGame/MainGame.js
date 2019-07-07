@@ -114,32 +114,51 @@ export default class MainGame extends Component {
 
   componentWillMount() {
     this.setState({ ...initState, ...this.context }, () => {
+      const { availableColors } = this.context;
       const { activeColumn } = this.state;
-      setKeyHandlers((key) => {
-        switch (key) {
-          case 'Enter':
-            this.handleValidate(activeColumn);
-            break;
-          case '1':
-            this.setMovement('red');
-            break;
-          case '2':
-            this.setMovement('yellow');
-            break;
-          case '3':
-            this.setMovement('blue');
-            break;
-          case '4':
-            this.setMovement('green');
-            break;
-          case '5':
-            this.setMovement('purple');
-            break;
-          default:
-            break;
+      setKeyHandlers(this.context, (key) => {
+        if (
+          Number(key) <= this.context.availableColors.length ||
+          key === 'Enter'
+        ) {
+          switch (key) {
+            case 'Enter':
+              this.handleValidate(activeColumn);
+              break;
+            case '1':
+              this.setMovement(availableColors[0]);
+              break;
+            case '2':
+              this.setMovement(availableColors[1]);
+              break;
+            case '3':
+              this.setMovement(availableColors[2]);
+              break;
+            case '4':
+              this.setMovement(availableColors[3]);
+              break;
+            case '5':
+              this.setMovement(availableColors[4]);
+              break;
+            case '6':
+              this.setMovement(availableColors[5]);
+              break;
+            case '7':
+              this.setMovement(availableColors[6]);
+              break;
+            case '8':
+              this.setMovement(availableColors[7]);
+              break;
+            default:
+              break;
+          }
         }
       });
     });
+  }
+
+  componentDidMount() {
+    console.log('this.context', this.context);
   }
 
   componentWillUnmount() {
@@ -206,6 +225,7 @@ export default class MainGame extends Component {
       validation,
       bonus,
       timeElapsed,
+      availableColors,
     } = this.state;
 
     const turn = Object.values(itemColors[activeColumn]);
@@ -228,6 +248,7 @@ export default class MainGame extends Component {
         gameFinish,
         activeColumn,
         timeElapsed,
+        availableColors.length,
       );
       this.setState({
         gameWin: true,
@@ -247,6 +268,7 @@ export default class MainGame extends Component {
         match,
         activeColumn,
         timeElapsed,
+        availableColors.length,
       );
 
       this.setState({
@@ -271,8 +293,8 @@ export default class MainGame extends Component {
     });
   };
 
-  resetGame = () => {
-    this.state.resetGame();
+  handleResetGame = (level) => {
+    this.state.resetGame(level);
     this.setState(initState);
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((item) => {
       localStorage.removeItem(`item-${item}`);
@@ -294,7 +316,7 @@ export default class MainGame extends Component {
       ...this.state,
       handleValidate: this.handleValidate,
       handleSetColor: this.handleSetColor,
-      resetGame: this.resetGame,
+      handleResetGame: this.handleResetGame,
       selectedItemRef: this.selectedItemRef,
       setUserSelectedMovement: this.setUserSelectedMovement,
     };
@@ -304,8 +326,8 @@ export default class MainGame extends Component {
         <div className="tablero">
           {gameWin || gameLost ? (
             <Suspense fallback={<div />}>
-              {gameWin && <GameFinish status="win" />}
-              {gameLost && <GameFinish status="lost" />}
+              {gameWin && <GameFinish status />}
+              {gameLost && <GameFinish status />}
             </Suspense>
           ) : (
             <>

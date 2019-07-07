@@ -1,17 +1,38 @@
-import React from 'react';
+import { createContext } from 'react';
 
-import rules from '../utils/rules';
+function shuffle(array) {
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
 const defaultGameContext = {
   result: [],
-  resetGame() {
-    this.result = rules(4);
-    return this.result;
-  },
   playerName: '',
+  availableColors: [],
+  level: '',
   setPlayerName(playerName) {
     this.playerName = playerName;
   },
+  resetGame(level) {
+    this.availableColors = [...level.items];
+    this.result = shuffle(level.items).splice(0, 4);
+    this.level = level.name;
+  },
 };
 
-export const GameContext = React.createContext(defaultGameContext);
+export const GameContext = createContext(defaultGameContext);
