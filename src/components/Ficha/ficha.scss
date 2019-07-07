@@ -9,6 +9,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media screen and (max-width: 768px) {
+        width: 1.8rem;
+        height: 1.8rem;
+        margin: .2rem;
+        border: none;
+    }
 }
 
 .ficha-seleccionable {
@@ -34,23 +41,7 @@
     background: black;
     background: rgba(0, 0, 0, 0);
 }
+
 .ficha-point:hover {
     transform: scale(0, 0);
-
-}
-
-@media screen and (max-width: 768px) {
-    .ficha {
-        width: 1.8rem;
-        height: 1.8rem;
-        margin: .2rem;
-        border: none;
-    }
-
-    .ficha-seleccionable {
-        width: 1rem;
-        height: 1rem;
-        margin: .2rem;
-        border: none;
-    }
 }

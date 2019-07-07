@@ -11,16 +11,9 @@ export default class GameFinish extends Component {
   componentDidMount() {
     const { scoreManager } = this.context;
 
-    console.log('this.context', this.context);
-
     const scoreRef = db.ref(`score/${this.context.playerName}`);
     scoreRef.on('value', (snapshot) => {
       if (snapshot.val().score < scoreManager.score) {
-        console.log('snapshot.val().score', snapshot.val().score);
-        console.log(
-          'this.context.scoreManager.score',
-          this.context.scoreManager.score,
-        );
         alert('has superado tu record');
         scoreRef.set(scoreManager);
       }

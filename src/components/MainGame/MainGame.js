@@ -313,6 +313,10 @@ export default class MainGame extends Component {
               <Seleccionables />
               <Validations />
               <TableroJuego />
+              <p>
+                Puedes usar los números (1,2,3...) para seleccionar un color y
+                (Enter) para validar la jugada.
+              </p>
             </>
           )}
         </div>

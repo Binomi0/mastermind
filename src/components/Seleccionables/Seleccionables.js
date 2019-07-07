@@ -15,10 +15,10 @@ const Seleccionables = memo(function Seleccionables() {
             {Object.keys(colors).map((color, index) => (
               <Seleccionable key={color} color={color} index={index + 1} />
             ))}
-            <button disabled={!turnFilled} onClick={handleValidate}>
-              Validar jugada
-            </button>
           </div>
+          <button disabled={!turnFilled} onClick={handleValidate}>
+            Validar jugada
+          </button>
         </div>
       )}
     </GameContext.Consumer>

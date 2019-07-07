@@ -50,7 +50,7 @@ export default class Dashboard extends Component {
         <h1>MasterMind Game</h1>
         {filled && (
           <div>
-            <h1>Bienvenido {playerName}</h1>
+            <h3>Bienvenido {playerName}</h3>
             <button className="new-game-button" onClick={this.handleNewGame}>
               Nueva Partida
             </button>

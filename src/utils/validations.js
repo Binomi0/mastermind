@@ -42,6 +42,5 @@ export const setGameScore = (match, column, timeElapsed) => {
   if (match.length) {
     partialScore = match.reduce((a, b) => a + b, partialScore);
   }
-  console.log('partialScore', partialScore);
   return Math.floor(parseInt(score * partialScore, 10));
 };
