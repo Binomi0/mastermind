@@ -6,6 +6,6 @@
 
 @media screen and (max-width: 768px) {
     .tablero-juego {
-        /* flex-direction: column; */
+        justify-content: space-evenly;
     }
 }
