@@ -9,7 +9,7 @@ const Validations = memo(function Validations() {
   return (
     <GameContext.Consumer>
       {({ activeColumn, validation }) => (
-        <div className="tablero-juego validations">
+        <div className="validations">
           {Object.keys(validation).map((column) => (
             <Validation
               key={column}

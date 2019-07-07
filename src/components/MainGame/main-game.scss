@@ -1,7 +1,13 @@
 .tablero {
-    max-width: 1024px;
+    width: 1000px;
     padding: 1rem;
     margin: 1rem;
+
+    @media screen and (max-width: 1024px) {
+        width: 800px;
+        padding: .0;
+        margin: .5rem;
+    }
 
     @media screen and (max-width: 768px) {
         padding: .0;
@@ -9,15 +15,15 @@
     }
 
     @media (max-width: 640px) {
-        max-width: 600px;
+        width: 600px;
     }
 
     @media (max-width: 480px) {
-        max-width: 460px;
+        width: 460px;
     }
 
     @media (max-width: 360px) {
-        max-width: 320px;
+        width: 320px;
     }
 }
 

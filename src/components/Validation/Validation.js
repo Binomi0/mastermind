@@ -8,7 +8,7 @@ export default class Validation extends PureComponent {
     // console.log('validItems', validItems);
     return (
       <div className="validation-group">
-        <div className="columna">
+        <div className="validation-column">
           {[0, 1].map((item) => (
             <div
               key={item}
@@ -16,7 +16,7 @@ export default class Validation extends PureComponent {
             />
           ))}
         </div>
-        <div className="columna">
+        <div className="validation-column">
           {[2, 3].map((item) => (
             <div
               key={item}
