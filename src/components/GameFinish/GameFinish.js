@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 import db from '../../config/firebase';
 import Records from '../Records';
-import './gameFinish.css';
 import { GameContext } from '../../context/game';
+import './gameFinish.scss';
 
 export default class GameFinish extends Component {
   static contextType = GameContext;

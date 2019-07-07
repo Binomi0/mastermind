@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GameContext } from '../../context/game';
 
-import './header.css';
+import './header.scss';
 
 export default class Header extends Component {
   static contextType = GameContext;

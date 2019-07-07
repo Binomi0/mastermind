@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { GameContext } from '../../context/game';
 
-import './ficha.css';
+import './ficha.scss';
 
 export default class Ficha extends Component {
   static contextType = GameContext;

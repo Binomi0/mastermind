@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { GameContext } from '../../context/game';
 import Ficha from '../Ficha/Ficha';
 
-import './column.css';
+import './column.scss';
 
 export default class Column extends Component {
   render() {

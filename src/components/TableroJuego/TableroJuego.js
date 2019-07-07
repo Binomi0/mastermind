@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 
 import Column from '../Column/Column';
-import './tablero-juego.css';
 import { GameContext } from '../../context/game';
+import './tablero-juego.scss';
 
 const TableroJuego = memo(function TableroJuego() {
   return (

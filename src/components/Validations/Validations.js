@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import Validation from '../Validation/Validation';
 import { GameContext } from '../../context/game';
 
-import './validations.css';
+import './validations.scss';
 
 const Validations = memo(function Validations() {
   return (

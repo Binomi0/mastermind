@@ -3,7 +3,7 @@ import { GameContext } from '../context/game';
 
 import MainGame from '../components/MainGame';
 import Dashboard from '../components/Dashboard/Dashboard';
-import './App.css';
+import './App.scss';
 
 function App() {
   const [game, setGame] = React.useState(0);
