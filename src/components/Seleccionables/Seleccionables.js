@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import Seleccionable from '../Seleccionable/Seleccionable';
+import Seleccionable from '../Seleccionable';
 import { GameContext } from '../../context/game';
 
 import './seleccionable.scss';

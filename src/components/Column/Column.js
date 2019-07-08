@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { GameContext } from '../../context/game';
-import Ficha from '../Ficha/Ficha';
+import Ficha from '../Ficha';
 
 import './column.scss';
 

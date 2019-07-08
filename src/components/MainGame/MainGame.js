@@ -1,9 +1,9 @@
 import React, { Component, lazy, createRef, Suspense } from 'react';
 
-import TableroJuego from '../TableroJuego/TableroJuego';
-import Seleccionables from '../Seleccionables/Seleccionables';
-import Header from '../Header/Header';
-import Validations from '../Validations/Validations';
+import TableroJuego from '../TableroJuego';
+import Seleccionables from '../Seleccionables';
+import Header from '../Header';
+import Validations from '../Validations';
 import { GameContext } from '../../context/game';
 import * as validations from '../../utils/validations';
 import { setKeyHandlers } from '../../utils/handlers';

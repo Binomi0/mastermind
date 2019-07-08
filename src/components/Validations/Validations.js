@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import Validation from '../Validation/Validation';
+import Validation from '../Validation';
 import { GameContext } from '../../context/game';
 
 import './validations.scss';

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-import Column from '../Column/Column';
+import Column from '../Column';
 import { GameContext } from '../../context/game';
 import './tablero-juego.scss';
 
