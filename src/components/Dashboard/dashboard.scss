@@ -4,6 +4,15 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    select {
+        @media (max-width: 640px) {
+            color: white;
+            font-size: 1rem;
+        }
+
+        height: 2rem;
+    }
 }
 
 .dashboard > h1 {

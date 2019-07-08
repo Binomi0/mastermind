@@ -4,16 +4,30 @@
 }
 
 .column-group {
+    display: block;
+
+    @media (max-width: 640px) {
+        display: flex;
+    }
+
     span {
         font-size: 2.2rem;
 
         @media (max-width: 640px) {
+            margin-left: 2rem;
             font-size: 1.5rem;
+            transform: rotate(270deg);
         }
     }
 }
 
 .column-item {
+    display: block;
+
+    @media (max-width: 640px) {
+        display: flex;
+    }
+
     // width: 3rem;
 
     // @media screen and (max-width: 640px) {

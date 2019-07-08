@@ -29,11 +29,13 @@
 
     @media screen and (max-width: 640px) {
         width: 1.5rem;
+        justify-content: center;
 
         .validation-column {
             .validation-item {
-                width: .5rem;
-                height: .5rem;
+                width: .8rem;
+                height: .8rem;
+                margin: 0.1rem;
             }
         }
     }

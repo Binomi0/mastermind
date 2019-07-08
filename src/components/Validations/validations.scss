@@ -2,6 +2,14 @@
     padding: 1rem 0;
     display: flex;
     justify-content: space-evenly;
+    flex-direction: row;
+
+    @media (max-width: 640px) {
+        justify-content: space-around;
+        padding: 0;
+        flex-direction: column;
+        margin-right: 2rem;
+    }
 
     /* height: 100px; */
 }
