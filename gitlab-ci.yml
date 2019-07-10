@@ -20,7 +20,14 @@ cache:
   paths:
     - node_modules/
 
-test_async:
+code-testing:
+  image: node:latest
+  stage: test
+  before_script:
+    - echo "Run tests, run!"
   script:
     - npm install
-    - npm t
+    - npm test
+  artifacts:
+    paths:
+      - coverage/
