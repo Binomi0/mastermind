@@ -157,10 +157,6 @@ export default class MainGame extends Component {
     });
   }
 
-  componentDidMount() {
-    console.log('this.context', this.context);
-  }
-
   componentWillUnmount() {
     clearInterval(this.gameTimer);
   }
@@ -233,7 +229,6 @@ export default class MainGame extends Component {
 
     // Any of the items are not colured
     if (!isRowFilled) {
-      console.log('At least one item is not coloured.');
       return;
     }
 

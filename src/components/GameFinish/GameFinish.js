@@ -32,8 +32,12 @@ export default class GameFinish extends Component {
 
     const scoreRef = db.ref(`score/${this.context.playerName}`);
     scoreRef.on('value', (snapshot) => {
-      if (snapshot.val().score < scoreManager.score) {
-        alert('has superado tu record');
+      if (snapshot.val()) {
+        if (snapshot.val().score < scoreManager.score) {
+          alert('has superado tu record');
+          scoreRef.set(scoreManager);
+        }
+      } else {
         scoreRef.set(scoreManager);
       }
     });
@@ -49,7 +53,6 @@ export default class GameFinish extends Component {
 
   render() {
     const { status } = this.state;
-    console.log('status', status);
     return (
       <GameContext.Consumer>
         {({ scoreManager, activeColumn, playerName, gameWin, gameLost }) => (
