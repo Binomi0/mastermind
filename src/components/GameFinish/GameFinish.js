@@ -59,7 +59,8 @@ export default class GameFinish extends Component {
           <div className="game-finish">
             <Confetti active={status} config={config} />
             <Confetti active={status} config={config} />
-            {status === 'win' ? <h1>Has Ganado!</h1> : <h1>Has Perdido...</h1>}
+            {gameWin && <h1>Has Ganado!</h1>}
+{gameLost && <h1>Has Perdido...</h1>}
 
             <p>
               ¡{playerName}, has conseguido {scoreManager.score} puntos, en{' '}
