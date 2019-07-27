@@ -20,6 +20,7 @@ const config = {
   colors: ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'],
 };
 
+
 export default class GameFinish extends Component {
   static contextType = GameContext;
 
@@ -35,13 +36,18 @@ export default class GameFinish extends Component {
       if (snapshot.val()) {
         if (snapshot.val().score < scoreManager.score) {
           alert('has superado tu record');
-          scoreRef.set(scoreManager);
+          scoreRef.set(scoreManager, () => {
+            this.setState({ status: this.props.status });
+
+          });
         }
       } else {
-        scoreRef.set(scoreManager);
+        scoreRef.set(scoreManager, () => {
+          this.setState({ status: this.props.status });
+
+        });
       }
     });
-    this.setState({ status: this.props.status });
   }
 
   handleResetGame = () => {
@@ -60,7 +66,7 @@ export default class GameFinish extends Component {
             <Confetti active={status} config={config} />
             <Confetti active={status} config={config} />
             {gameWin && <h1>Has Ganado!</h1>}
-{gameLost && <h1>Has Perdido...</h1>}
+            {gameLost && <h1>Has Perdido...</h1>}
 
             <p>
               ¡{playerName}, has conseguido {scoreManager.score} puntos, en{' '}

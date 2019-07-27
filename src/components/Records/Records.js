@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import db from '../../config/firebase';
 import Record from '../Record';
@@ -15,42 +15,38 @@ function orderScore(a, b) {
   return 0;
 }
 
-export default class Records extends Component {
-  state = {
-    records: [],
-  };
+export default  () => {
+  const [records, setRecords] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
+    const orderRecords = (items => {
+      const recordList = Object.keys(items)
+        .map((r) => ({
+          player: items[r].player,
+          score: items[r].score,
+          time: items[r].time,
+        }))
+        .sort(orderScore);
+      setRecords(recordList);
+    });
+  
     db.ref('score')
       .once('value')
       .then((snapshot) => {
-        this.orderRecords(snapshot.val());
+        orderRecords(snapshot.val());
       });
-  }
+  }, []);
 
-  orderRecords = (records) => {
-    const recordList = Object.keys(records)
-      .map((r) => ({
-        player: records[r].player,
-        score: records[r].score,
-        time: records[r].time,
-      }))
-      .sort(orderScore);
-    this.setState({ records: recordList });
-  };
-
-  render() {
-    const { records } = this.state;
-
-    return (
-      <div className="records">
-        <ol className="records-list">
-          {records.length > 0 &&
-            records.map((record) => (
-              <Record key={record.player} record={record} />
-            ))}
-        </ol>
-      </div>
-    );
-  }
+  
+  return (
+    <div className="records">
+      <ol className="records-list">
+        {records.length > 0 &&
+          records.map((record) => (
+            <Record key={record.player} record={record} />
+          ))}
+      </ol>
+    </div>
+  );
 }
+
