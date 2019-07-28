@@ -20,7 +20,6 @@ const config = {
   colors: ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'],
 };
 
-
 export default class GameFinish extends Component {
   static contextType = GameContext;
 
@@ -38,13 +37,11 @@ export default class GameFinish extends Component {
           alert('has superado tu record');
           scoreRef.set(scoreManager, () => {
             this.setState({ status: this.props.status });
-
           });
         }
       } else {
         scoreRef.set(scoreManager, () => {
           this.setState({ status: this.props.status });
-
         });
       }
     });
@@ -55,6 +52,7 @@ export default class GameFinish extends Component {
     const items = [...levels[level]];
 
     this.context.handleResetGame({ items, name: level });
+    this.context.setGameStarted(false);
   };
 
   render() {

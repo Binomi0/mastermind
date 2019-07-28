@@ -108,79 +108,53 @@ export default class MainGame extends Component {
     super(props);
 
     this.context = GameContext;
-    this.state = { game: props.game };
     this.selectedItemRef = createRef();
   }
 
   componentWillMount() {
-    this.setState({ ...initState, ...this.context }, () => {
-      const { availableColors } = this.context;
-      const { activeColumn } = this.state;
-      setKeyHandlers(this.context, (key) => {
-        if (
-          Number(key) <= this.context.availableColors.length ||
-          key === 'Enter'
-        ) {
-          switch (key) {
-            case 'Enter':
-              this.handleValidate(activeColumn);
-              break;
-            case '1':
-              this.setMovement(availableColors[0]);
-              break;
-            case '2':
-              this.setMovement(availableColors[1]);
-              break;
-            case '3':
-              this.setMovement(availableColors[2]);
-              break;
-            case '4':
-              this.setMovement(availableColors[3]);
-              break;
-            case '5':
-              this.setMovement(availableColors[4]);
-              break;
-            case '6':
-              this.setMovement(availableColors[5]);
-              break;
-            case '7':
-              this.setMovement(availableColors[6]);
-              break;
-            case '8':
-              this.setMovement(availableColors[7]);
-              break;
-            default:
-              break;
-          }
-        }
-      });
-    });
+    this.setState({ ...initState, ...this.context }, this.setKeyHandlers);
   }
 
   componentWillUnmount() {
     clearInterval(this.gameTimer);
   }
 
-  setMovement = (color) => {
-    this.handleSetColor(color);
+  setKeyHandlers = () => {
+    const { availableColors } = this.context;
+    const { activeColumn } = this.state;
+
+    setKeyHandlers((key) => {
+      if (Number(key) <= availableColors.length || key === 'Enter') {
+        if (key === 'Enter') {
+          this.handleValidate(activeColumn);
+        }
+        if (/[1-8]/.test(key)) {
+          this.handleSetColor(availableColors[Number(key) - 1]);
+        }
+      }
+    });
+  };
+
+  setGameTimer = () => {
+    let timer = 0;
+    this.gameTimer = setInterval(() => {
+      timer += 1;
+      if (this.state.bonus > 0) {
+        const penalization = 20;
+        this.setState({
+          bonus: this.state.bonus - penalization,
+          timeElapsed: timer,
+        });
+      }
+    }, 1000);
   };
 
   handleSetColor = (color) => {
-    if (!this.state.gameStarted) {
-      this.setState({ gameStarted: true });
-      let timer = 0;
-      this.gameTimer = setInterval(() => {
-        timer += 1;
-        if (this.state.bonus > 0) {
-          const penalization = 20;
-          this.setState({
-            bonus: this.state.bonus - penalization,
-            timeElapsed: timer,
-          });
-        }
-      }, 1000);
+    const { activeColumn, movement, itemColors, gameStarted } = this.state;
+
+    if (!gameStarted) {
+      this.setState({ gameStarted: true }, this.setGameTimer);
     }
-    const { activeColumn, movement, itemColors } = this.state;
 
     if (movement / activeColumn > 4) {
       return;
@@ -225,10 +199,9 @@ export default class MainGame extends Component {
     } = this.state;
 
     const turn = Object.values(itemColors[activeColumn]);
-    const isRowFilled = validations.isRowFilled(turn);
 
     // Any of the items are not colured
-    if (!isRowFilled) {
+    if (!validations.isRowFilled(turn)) {
       return;
     }
 
@@ -283,7 +256,8 @@ export default class MainGame extends Component {
         ...validation,
         [activeColumn]: match,
       },
-      activeColumn: this.state.activeColumn + 1,
+      activeColumn: activeColumn + 1,
+      movement: activeColumn * 4 + 1,
       turnFilled: false,
     });
   };
@@ -300,7 +274,6 @@ export default class MainGame extends Component {
   setUserSelectedMovement = (item, column) => {
     if (column === this.state.activeColumn) {
       this.setState({ movement: item });
-      // this.setState({ userSelectedMovement: { column, item } });
     }
   };
 
@@ -309,6 +282,7 @@ export default class MainGame extends Component {
 
     const context = {
       ...this.state,
+      setGameStarted: this.props.setGameStarted,
       handleValidate: this.handleValidate,
       handleSetColor: this.handleSetColor,
       handleResetGame: this.handleResetGame,
