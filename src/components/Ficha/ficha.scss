@@ -5,12 +5,17 @@
   margin: 0.2rem;
   background: transparent;
   border-radius: 50%;
-  border: 1px solid burlywood;
+  border: 2px solid #fafafa;
   display: flex;
   justify-content: center;
   align-items: center;
 
+  &.active {
+    background: radial-gradient(#444 10%, #fafafa 15%);
+  }
+
   @media (max-width: 640px) {
+    border: 1px solid #fafafa;
     width: 2rem;
     height: 2rem;
   }

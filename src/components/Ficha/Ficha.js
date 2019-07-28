@@ -16,7 +16,7 @@ export default class Ficha extends Component {
     const { itemIndex, column, isColumnActive } = this.props;
     const { movement } = this.context;
 
-    const active = itemIndex <= movement && isColumnActive;
+    const active = itemIndex === movement && isColumnActive;
 
     return (
       <GameContext.Consumer>

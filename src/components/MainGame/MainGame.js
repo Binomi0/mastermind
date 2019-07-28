@@ -272,6 +272,7 @@ export default class MainGame extends Component {
   };
 
   setUserSelectedMovement = (item, column) => {
+    console.log(item);
     if (column === this.state.activeColumn) {
       this.setState({ movement: item });
     }
