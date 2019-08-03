@@ -1,43 +1,29 @@
 .column-active {
-    background: grey;
-    border: 1px solid grey;
+  border: 2px solid greenyellow;
 }
 
 .column-group {
-    display: block;
+  display: block;
+  span {
+    font-size: 2.2rem;
+    transition: all 0.4s;
+  }
 
-    @media (max-width: 640px) {
-        display: flex;
-    }
+  @media (max-width: 640px) {
+    display: flex;
 
     span {
-        font-size: 2.2rem;
-
-        @media (max-width: 640px) {
-            margin-left: 2rem;
-            font-size: 1.5rem;
-            transform: rotate(270deg);
-        }
+      margin-left: 2rem;
+      font-size: 1.5rem;
+      transform: rotate(270deg);
     }
+  }
 }
 
 .column-item {
-    display: block;
+  display: block;
 
-    @media (max-width: 640px) {
-        display: flex;
-    }
-
-    // width: 3rem;
-
-    // @media screen and (max-width: 640px) {
-    //     width: 1.5rem;
-
-    //     .validation-column {
-    //         .validation-item {
-    //             width: .5rem;
-    //             height: .5rem;
-    //         }
-    //     }
-    // }
+  @media (max-width: 640px) {
+    display: flex;
+  }
 }

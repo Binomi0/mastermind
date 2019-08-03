@@ -1,46 +1,21 @@
-const PERFECT_MATCH = 2;
 const PARTIAL_MATCH = 1;
 
 export const isRowFilled = (turn) => !turn.some((filled) => filled === '');
 
 export const getMatch = (turn, result) => {
-  let exactMatches = [];
-  const newTurn = Object.values(turn);
-  newTurn.forEach((match, i) => {
-    if (match === result[i]) {
-      exactMatches.push(match);
-    }
-  });
+  const partial = result.filter((x) => turn.includes(x)).map(() => 1);
+  const full = result.filter((x, i) => turn[i] === x).map(() => 2);
 
-  let partialMatches = [];
-  newTurn.forEach((match) => {
-    if (
-      result.indexOf(match) > -1 &&
-      !partialMatches.includes(match) &&
-      !exactMatches.includes(match)
-    ) {
-      partialMatches.push(match);
-    }
-  });
-
-  let matches = [];
-  exactMatches.forEach((item) => {
-    matches.push(PERFECT_MATCH);
-  });
-  partialMatches.forEach((item) => {
-    matches.push(PARTIAL_MATCH);
-  });
-
-  return matches;
+  return Object.assign([], partial, full);
 };
 
-export const setGameScore = (match, column, timeElapsed, level) => {
-  const maxScore = 1000;
-
-  const score = maxScore / column / timeElapsed;
-  let partialScore = PARTIAL_MATCH;
+export const setGameScore = (match = [], column, timeElapsed, level) => {
   if (match.length) {
+    const maxScore = 1000;
+
+    const score = maxScore / column / timeElapsed;
+    let partialScore = PARTIAL_MATCH;
     partialScore = match.reduce((a, b) => a + b, partialScore);
+    return Math.floor(parseInt(score * partialScore * (level * 2), 10));
   }
-  return Math.floor(parseInt(score * partialScore * (level * 2), 10));
 };

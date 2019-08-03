@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-notifications-component/dist/theme.css';
 
 import MainGame from '../components/MainGame';
 import Dashboard from '../components/Dashboard/Dashboard';

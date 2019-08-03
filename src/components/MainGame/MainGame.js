@@ -1,4 +1,5 @@
 import React, { Component, lazy, createRef, Suspense } from 'react';
+import ReactNotification from 'react-notifications-component';
 
 import TableroJuego from '../TableroJuego';
 import Seleccionables from '../Seleccionables';
@@ -7,12 +8,18 @@ import Validations from '../Validations';
 import { GameContext } from '../../context/game';
 import * as validations from '../../utils/validations';
 import { setKeyHandlers } from '../../utils/handlers';
+import { setItemColors, setValidations } from '../../utils/helpers';
 import './main-game.scss';
-// import ScoreManager from '../../utils/ScoreManager';
 
-const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
+const GameFinish = lazy(() => import('../GameFinish'));
 
 const initState = {
+  notification: {
+    message: 'El juego empieza tras el primer movimiento, ¡suerte!',
+    title: 'Bienvenid@',
+    type: 'info',
+    duration: 4000,
+  },
   selectedColor: 'white',
   scoreManager: {
     score: 0,
@@ -27,80 +34,8 @@ const initState = {
   gameWin: false,
   gameLost: false,
   turnFilled: false,
-  itemColors: {
-    1: {
-      1: '',
-      2: '',
-      3: '',
-      4: '',
-    },
-    2: {
-      5: '',
-      6: '',
-      7: '',
-      8: '',
-    },
-    3: {
-      9: '',
-      10: '',
-      11: '',
-      12: '',
-    },
-    4: {
-      13: '',
-      14: '',
-      15: '',
-      16: '',
-    },
-    5: {
-      17: '',
-      18: '',
-      19: '',
-      20: '',
-    },
-    6: {
-      21: '',
-      22: '',
-      23: '',
-      24: '',
-    },
-    7: {
-      25: '',
-      26: '',
-      27: '',
-      28: '',
-    },
-    8: {
-      29: '',
-      30: '',
-      31: '',
-      32: '',
-    },
-    9: {
-      33: '',
-      34: '',
-      35: '',
-      36: '',
-    },
-    10: {
-      37: '',
-      38: '',
-      39: '',
-      40: '',
-    },
-  },
-  validation: {
-    1: [0, 0, 0, 0],
-    2: [0, 0, 0, 0],
-    3: [0, 0, 0, 0],
-    4: [0, 0, 0, 0],
-    5: [0, 0, 0, 0],
-    6: [0, 0, 0, 0],
-    7: [0, 0, 0, 0],
-    8: [0, 0, 0, 0],
-    9: [0, 0, 0, 0],
-    10: [0, 0, 0, 0],
-  },
+  itemColors: setItemColors(),
+  validation: setValidations(),
 };
 
 export default class MainGame extends Component {
@@ -109,10 +44,16 @@ export default class MainGame extends Component {
 
     this.context = GameContext;
     this.selectedItemRef = createRef();
+    this.notificationDOMRef = createRef();
   }
 
   componentWillMount() {
     this.setState({ ...initState, ...this.context }, this.setKeyHandlers);
+  }
+
+  componentDidMount() {
+    console.log(setItemColors());
+    this.addNotification();
   }
 
   componentWillUnmount() {
@@ -251,15 +192,39 @@ export default class MainGame extends Component {
       return;
     }
 
-    this.setState({
-      validation: {
-        ...validation,
-        [activeColumn]: match,
+    this.setState(
+      {
+        validation: {
+          ...validation,
+          [activeColumn]: match,
+        },
+        activeColumn: activeColumn + 1,
+        movement: activeColumn * 4 + 1,
+        turnFilled: false,
       },
-      activeColumn: activeColumn + 1,
-      movement: activeColumn * 4 + 1,
-      turnFilled: false,
-    });
+      () => this.handleNewNotification(match.length, gameFinish.length),
+    );
+  };
+
+  handleNewNotification = (colorsCount, positionCount) => {
+    const notificationTitle = `${colorsCount === 0 ? '¡Ups!' : '¡Sigue así!'}`;
+    const colorText = colorsCount === 1 ? 'color' : 'colores';
+    const positionText = positionCount === 1 ? 'posición' : 'posiciones';
+    const notificationMessage = `Has acertado ${colorsCount} ${colorText} y ${positionCount}
+    ${positionText}`;
+
+    this.setState(
+      {
+        notification: {
+          ...this.state.notification,
+          title: notificationTitle,
+          message: notificationMessage,
+          type: 'info',
+          duration: 2000,
+        },
+      },
+      this.addNotification,
+    );
   };
 
   handleResetGame = (level) => {
@@ -277,6 +242,20 @@ export default class MainGame extends Component {
       this.setState({ movement: item });
     }
   };
+
+  addNotification() {
+    this.notificationDOMRef.current.addNotification({
+      title: this.state.notification.title,
+      message: this.state.notification.message,
+      type: this.state.notification.type,
+      insert: 'bottom',
+      container: 'top-right',
+      animationIn: ['animated', 'fadeIn'],
+      animationOut: ['animated', 'fadeOut'],
+      dismiss: { duration: this.state.notification.duration },
+      dismissable: { click: true, touch: true },
+    });
+  }
 
   render() {
     const { gameWin, gameLost } = this.state;
@@ -301,6 +280,10 @@ export default class MainGame extends Component {
             </Suspense>
           ) : (
             <>
+              <ReactNotification
+                ref={this.notificationDOMRef}
+                onNotificationRemoval={() => console.log('OJET')}
+              />
               <Header />
               <div className="game-container">
                 <Validations />
