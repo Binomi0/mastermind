@@ -1,35 +1,39 @@
-import React, { Component } from 'react';
-
-import { GameContext } from '../../context/game';
-
+import React from 'react';
+import { connect } from 'react-redux';
+import { setUserSelectedMovement } from '../../reducers/gameReducer';
 import './ficha.scss';
 
-export default class Ficha extends Component {
-  static contextType = GameContext;
-
-  handleClick = () => {
-    const { itemIndex, column } = this.props;
-    this.context.setUserSelectedMovement(itemIndex, column);
+const Ficha = ({
+  itemIndex,
+  column,
+  isColumnActive,
+  movement,
+  itemColors,
+  setUserSelectedMovement,
+}) => {
+  const handleClick = () => {
+    setUserSelectedMovement(itemIndex, column);
   };
 
-  render() {
-    const { itemIndex, column, isColumnActive } = this.props;
-    const { movement } = this.context;
+  const active = itemIndex <= movement && isColumnActive;
 
-    const active = itemIndex <= movement && isColumnActive;
+  return (
+    <div
+      onClick={handleClick}
+      className={`ficha ficha-${itemIndex} column-${column}${
+        active ? ' active' : ''
+      }`}
+      style={{ background: itemColors[column][itemIndex] }}
+    />
+  );
+};
 
-    return (
-      <GameContext.Consumer>
-        {({ itemColors }) => (
-          <div
-            onClick={this.handleClick}
-            className={`ficha ficha-${itemIndex} column-${column}${
-              active ? ' active' : ''
-            }`}
-            style={{ background: itemColors[column][itemIndex] }}
-          />
-        )}
-      </GameContext.Consumer>
-    );
-  }
-}
+const mapStateToProps = ({ game }) => ({
+  itemColors: game.itemColors,
+  movement: game.movement,
+});
+
+export default connect(
+  mapStateToProps,
+  { setUserSelectedMovement },
+)(Ficha);

@@ -1,275 +1,83 @@
 import React, { Component, lazy, createRef, Suspense } from 'react';
 import { connect } from 'react-redux';
-
 import TableroJuego from '../TableroJuego';
 import Seleccionables from '../Seleccionables';
 import Header from '../Header';
 import Validations from '../Validations';
-import { GameContext } from '../../context/game';
-import * as validations from '../../utils/validations';
-import { setKeyHandlers } from '../../utils/handlers';
+import {
+  setKeyListeners,
+  isValidKey,
+  isEnterKeyPressed,
+} from '../../utils/handlers';
 import './main-game.scss';
-import {startGame} from '../../reducers/gameReducer';
-
-// import ScoreManager from '../../utils/ScoreManager';
+import { actions } from '../../reducers/gameReducer';
 
 const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
-
-const initState = {
-  selectedColor: 'white',
-  scoreManager: {
-    score: 0,
-    player: '',
-    time: 0,
-  },
-  movement: 1,
-  timeElapsed: 0,
-  bonus: 1000,
-  activeColumn: 1,
-  gameWin: false,
-  gameLost: false,
-  turnFilled: false,
-  itemColors: {
-    1: {
-      1: '',
-      2: '',
-      3: '',
-      4: '',
-    },
-    2: {
-      5: '',
-      6: '',
-      7: '',
-      8: '',
-    },
-    3: {
-      9: '',
-      10: '',
-      11: '',
-      12: '',
-    },
-    4: {
-      13: '',
-      14: '',
-      15: '',
-      16: '',
-    },
-    5: {
-      17: '',
-      18: '',
-      19: '',
-      20: '',
-    },
-    6: {
-      21: '',
-      22: '',
-      23: '',
-      24: '',
-    },
-    7: {
-      25: '',
-      26: '',
-      27: '',
-      28: '',
-    },
-    8: {
-      29: '',
-      30: '',
-      31: '',
-      32: '',
-    },
-    9: {
-      33: '',
-      34: '',
-      35: '',
-      36: '',
-    },
-    10: {
-      37: '',
-      38: '',
-      39: '',
-      40: '',
-    },
-  },
-  validation: {
-    1: [0, 0, 0, 0],
-    2: [0, 0, 0, 0],
-    3: [0, 0, 0, 0],
-    4: [0, 0, 0, 0],
-    5: [0, 0, 0, 0],
-    6: [0, 0, 0, 0],
-    7: [0, 0, 0, 0],
-    8: [0, 0, 0, 0],
-    9: [0, 0, 0, 0],
-    10: [0, 0, 0, 0],
-  },
-};
 
 class MainGame extends Component {
   constructor(props) {
     super(props);
 
-    this.context = GameContext;
     this.selectedItemRef = createRef();
+    this.state = { hasError: false };
   }
 
   componentWillMount() {
-    this.setState({ ...initState, ...this.context }, () => {
-      const { availableColors } = this.context;
-      const { activeColumn } = this.state;
+    const { availableColors } = this.props.game;
 
-      setKeyHandlers((key) => {
-        if (Number(key) <= availableColors.length || key === 'Enter') {
-          if (/[1-8]/.test(key)) {
-            this.setMovement(availableColors[Number(key) - 1]);
-          }
-          if (key === 'Enter') {
-            this.handleValidate(activeColumn);
-          }
+    setKeyListeners((key) => {
+      if (isValidKey(key, availableColors.length)) {
+        if (/[1-8]/.test(key)) {
+          this.handleSetMovement(availableColors[Number(key) - 1]);
         }
-      });
+        if (isEnterKeyPressed(key)) {
+          this.handleValidate();
+        }
+      }
     });
   }
 
-  componentDidMount() {
-    console.log(this.props)
-    this.setGameTimer();
+  componentDidCatch(error) {
+    console.log('He capturado un error', error);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.gameTimer);
+  static getDerivedStateFromError() {
+    return { hasError: true };
   }
-
-  setMovement = (color) => {
-    this.handleSetColor(color);
-  };
 
   setGameTimer = () => {
     let timer = 0;
-    this.gameTimer = setInterval(() => {
-      timer += 1;
-      if (this.state.bonus > 0) {
-        const penalization = 10;
-        this.setState({
-          bonus: this.state.bonus - penalization,
-          timeElapsed: timer,
-        });
-      }
-    }, 1000);
-  }
-
-  handleSetColor = (color) => {
-    const { activeColumn, movement, itemColors } = this.state;
-
-    if (movement / activeColumn > 4) {
-      return;
+    if (!this.gameTimer) {
+      this.gameTimer = setInterval(() => {
+        timer += 1;
+        this.props.updateTimer(timer);
+      }, 1000);
     }
+  };
 
-    this.setState(
-      {
-        selectedColor: color,
-        itemColors: {
-          ...itemColors,
-          [activeColumn]: {
-            ...itemColors[activeColumn],
-            [movement]: color,
-          },
-        },
-        movement: movement + 1,
-      },
-      this.handleTurn,
-    );
+  handleSetMovement = (color) => {
+    if (this.props.game.timeElapsed === 0) {
+      this.setGameTimer();
+    }
+    const { activeColumn, movement, itemColors } = this.props.game;
+
+    this.props.handleSetMovement({ color, activeColumn, movement, itemColors });
   };
 
   handleTurn = () => {
-    const { activeColumn, itemColors } = this.state;
-    const turn = Object.values(itemColors[activeColumn]);
-    const isRowFilled = validations.isRowFilled(turn);
-    if (!isRowFilled) {
-      this.setState({ turnFilled: false });
-    } else {
-      this.setState({ turnFilled: true });
-    }
+    this.props.handleTurn();
   };
 
   handleValidate = () => {
-    const {
-      result,
-      activeColumn,
-      itemColors,
-      validation,
-      bonus,
-      timeElapsed,
-      availableColors,
-    } = this.state;
-
-    const turn = Object.values(itemColors[activeColumn]);
-    const isRowFilled = validations.isRowFilled(turn);
-
-    // Any of the items are not colured
-    if (!isRowFilled) {
-      return;
-    }
-
-    const match = validations.getMatch(turn, result);
-
-    // Fills `gameFinish` list with matched results identified with number 2
-    const gameFinish = match.filter((item) => item === 2);
-
-    // 4 items are equal to 2 so player wins
-    if (gameFinish.length === 4) {
-      const newScore = validations.setGameScore(
-        gameFinish,
-        activeColumn,
-        timeElapsed,
-        availableColors.length,
-      );
-      this.setState({
-        gameWin: true,
-        scoreManager: {
-          score: newScore + bonus,
-          player: this.context.playerName,
-          time: timeElapsed,
-        },
-      });
+    this.props.handleValidate(() => {
+      console.log('Juego Terminado');
+      console.log('this.gameTimer =>', this.gameTimer);
       clearInterval(this.gameTimer);
-      return;
-    }
-
-    // Last column was filled so game over
-    if (activeColumn === 10) {
-      const newScore = validations.setGameScore(
-        match,
-        activeColumn,
-        timeElapsed,
-        availableColors.length,
-      );
-
-      this.setState({
-        gameLost: true,
-        scoreManager: {
-          score: newScore,
-          player: this.context.playerName,
-          time: timeElapsed,
-        },
-      });
-      clearInterval(this.gameTimer);
-      return;
-    }
-
-    this.setState({
-      validation: {
-        ...validation,
-        [activeColumn]: match,
-      },
-      activeColumn: this.state.activeColumn + 1,
-      turnFilled: false,
     });
   };
 
-  handleResetGame = (level) => {
-    this.state.resetGame(level);
-    this.setState(initState);
+  handleResetGame = () => {
+    this.props.resetGame();
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((item) => {
       localStorage.removeItem(`item-${item}`);
     });
@@ -277,58 +85,49 @@ class MainGame extends Component {
   };
 
   setUserSelectedMovement = (item, column) => {
-    if (column === this.state.activeColumn) {
-      this.setState({ movement: item });
+    if (column === this.props.activeColumn) {
+      this.props.setUserSelectedMovement(item);
     }
   };
 
   render() {
-    const { gameWin, gameLost } = this.state;
-
-    const context = {
-      ...this.state,
-      gameStarted: this.props.gameStarted,
-      handleValidate: this.handleValidate,
-      handleSetColor: this.handleSetColor,
-      handleResetGame: this.handleResetGame,
-      selectedItemRef: this.selectedItemRef,
-      setUserSelectedMovement: this.setUserSelectedMovement,
-    };
+    const {
+      game: { gameWin, gameLost },
+    } = this.props;
+    const { hasError } = this.state;
 
     return (
-      <GameContext.Provider value={context}>
-        <div className="tablero">
-          {gameWin || gameLost ? (
-            <Suspense fallback={<div />}>
-              {gameWin && <GameFinish status />}
-              {gameLost && <GameFinish status />}
-            </Suspense>
-          ) : (
-            <>
-              <Header />
-              <div className="game-container">
-                <Validations />
-                <TableroJuego />
-              </div>
-              <Seleccionables />
-              <p>
-                Puedes usar los números (1,2,3...) para seleccionar un color y
-                (Enter) para validar la jugada.
-              </p>
-            </>
-          )}
-        </div>
-      </GameContext.Provider>
+      <div className="tablero">
+        {gameWin || gameLost ? (
+          <Suspense fallback={<div />}>
+            {gameWin && <GameFinish status />}
+            {gameLost && <GameFinish status />}
+          </Suspense>
+        ) : (
+          <>
+            <Header />
+            <div className="game-container">
+              <Validations />
+              <TableroJuego />
+            </div>
+            <Seleccionables />
+            <p>
+              Puedes usar los números (1,2,3...) para seleccionar un color y
+              (Enter) para validar la jugada.
+            </p>
+          </>
+        )}
+        {hasError && <h1>Mierda un ojet!</h1>}
+      </div>
     );
   }
 }
 
-MainGame.contextType = GameContext;
+const mapStateToProps = ({ game, score }) => ({ game, score });
 
-const mapStateToProps = ({game}) => ({
-  gameStarted: game.gameStarted
-});
+const mapDispatchToProps = { ...actions };
 
-const mapDispatchToProps = {startGame};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainGame)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MainGame);

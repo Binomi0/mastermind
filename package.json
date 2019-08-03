@@ -5,6 +5,7 @@
   "dependencies": {
     "firebase": "^6.2.4",
     "mastermind-ficha": "file:../modules/ficha",
+    "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-dom-confetti": "^0.1.1",

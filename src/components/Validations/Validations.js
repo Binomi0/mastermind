@@ -1,26 +1,25 @@
-import React, { memo } from 'react';
-
+import React from 'react';
+import { connect } from 'react-redux';
 import Validation from '../Validation';
-import { GameContext } from '../../context/game';
-
 import './validations.scss';
 
-const Validations = memo(function Validations() {
+const Validations = ({ validation, activeColumn }) => {
   return (
-    <GameContext.Consumer>
-      {({ activeColumn, validation }) => (
-        <div className="validations">
-          {Object.keys(validation).map((column) => (
-            <Validation
-              key={column}
-              validItems={validation[column]}
-              active={activeColumn === column}
-            />
-          ))}
-        </div>
-      )}
-    </GameContext.Consumer>
+    <div className="validations">
+      {Object.keys(validation).map((column) => (
+        <Validation
+          key={column}
+          validItems={validation[column]}
+          active={activeColumn === column}
+        />
+      ))}
+    </div>
   );
+};
+
+const mapStateToProps = ({ game }) => ({
+  activeColumn: game.activeColumn,
+  validation: game.validation,
 });
 
-export default Validations;
+export default connect(mapStateToProps)(Validations);

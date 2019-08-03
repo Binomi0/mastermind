@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import Confetti from 'react-dom-confetti';
-
+import { connect } from 'react-redux';
 import db from '../../config/firebase';
 import Records from '../Records';
-import { GameContext } from '../../context/game';
-import * as levels from '../../utils/constants';
+import { actions } from '../../reducers/gameReducer';
 import './gameFinish.scss';
 
-const config = {
+const confettiConfig = {
   angle: 90,
   spread: 45,
   startVelocity: 45,
@@ -20,67 +19,89 @@ const config = {
   colors: ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'],
 };
 
-
-export default class GameFinish extends Component {
-  static contextType = GameContext;
-
+class GameFinish extends Component {
   state = {
-    status: null,
+    confettiStatus: null,
   };
 
   componentDidMount() {
-    const { scoreManager } = this.context;
+    const { points, playerName, timeElapsed } = this.props;
+    const scoreRef = db.ref(`score/${playerName}`);
+    const newScore = {
+      score: points,
+      player: playerName,
+      time: timeElapsed,
+    };
 
-    const scoreRef = db.ref(`score/${this.context.playerName}`);
+    console.log(newScore);
+
     scoreRef.on('value', (snapshot) => {
       if (snapshot.val()) {
-        if (snapshot.val().score < scoreManager.score) {
+        if (snapshot.val().score < points) {
           alert('has superado tu record');
-          scoreRef.set(scoreManager, () => {
-            this.setState({ status: this.props.status });
-
+          scoreRef.set(newScore, () => {
+            this.setState({ confettiStatus: true });
           });
         }
       } else {
-        scoreRef.set(scoreManager, () => {
-          this.setState({ status: this.props.status });
-
+        scoreRef.set(newScore, () => {
+          this.setState({ confettiStatus: true });
         });
       }
     });
   }
 
   handleResetGame = () => {
-    const { level } = this.context;
-    const items = [...levels[level]];
-
-    this.context.handleResetGame({ items, name: level });
-    this.context.setGameStarted(false);
+    this.props.resetGame();
+    this.props.setGameFinished();
   };
 
   render() {
-    const { status } = this.state;
+    const { confettiStatus } = this.state;
+    const {
+      points,
+      activeColumn,
+      timeElapsed,
+      gameWin,
+      gameLost,
+      playerName,
+    } = this.props;
+
+    const winMessage = `Has conseguido ${points} puntos, en ${timeElapsed} segundos y ${activeColumn} columnas!`;
+    const lostMessage = `Creo que deberías practicar un poco más...`;
     return (
-      <GameContext.Consumer>
-        {({ scoreManager, activeColumn, playerName, gameWin, gameLost }) => (
-          <div className="game-finish">
-            <Confetti active={status} config={config} />
-            <Confetti active={status} config={config} />
-            {gameWin && <h1>Has Ganado!</h1>}
-            {gameLost && <h1>Has Perdido...</h1>}
+      <section>
+        <div className="game-finish">
+          <Confetti active={confettiStatus} config={confettiConfig} />
 
-            <p>
-              ¡{playerName}, has conseguido {scoreManager.score} puntos, en{' '}
-              {scoreManager.time} segundos y {activeColumn} columnas!
-            </p>
-            <button className="finish-button" onClick={this.handleResetGame}>
-              Jugar otra vez
-            </button>
+          {gameWin && <h1>¡Has Ganado {playerName}!</h1>}
+          {gameLost && <h1>{playerName}, has perdido...</h1>}
 
-            <Records />
-          </div>
-        )}
-      </GameContext.Consumer>
+          <p>{gameWin && winMessage}</p>
+          <p>{gameLost && lostMessage}</p>
+
+          <button className="finish-button" onClick={this.handleResetGame}>
+            Jugar otra vez
+          </button>
+
+          <Records />
+        </div>
+      </section>
     );
   }
 }
+
+const mapStateToProps = ({ settings, game, score, user }) => ({
+  points: score.points,
+  activeColumn: game.activeColumn,
+  playerName: user.playerName,
+  gameWin: game.gameWin,
+  gameLost: game.gameLost,
+  timeElapsed: game.timeElapsed,
+  level: settings.level,
+});
+
+export default connect(
+  mapStateToProps,
+  { ...actions },
+)(GameFinish);
