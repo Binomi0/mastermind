@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-
 import * as levels from '../../utils/constants';
 import { GameContext } from '../../context/game';
 import Records from '../Records';
 import './dashboard.scss';
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
   static contextType = GameContext;
 
   state = {
@@ -24,7 +23,8 @@ export default class Dashboard extends Component {
   }
 
   handleNewGame = () => {
-    this.props.setGameStarted(true);
+    console.log('handleNewGame', this.props)
+    this.props.startGame();
     this.context.resetGame(this.state.level);
   };
 
@@ -127,3 +127,4 @@ export default class Dashboard extends Component {
     );
   }
 }
+export default Dashboard;

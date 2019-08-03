@@ -55,6 +55,7 @@ export default class GameFinish extends Component {
     const items = [...levels[level]];
 
     this.context.handleResetGame({ items, name: level });
+    this.context.setGameStarted(false);
   };
 
   render() {

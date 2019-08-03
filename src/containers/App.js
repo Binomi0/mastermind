@@ -1,24 +1,22 @@
 import React from 'react';
-import { GameContext } from '../context/game';
 
+import {connect} from 'react-redux';
 import MainGame from '../components/MainGame';
 import Dashboard from '../components/Dashboard/Dashboard';
 import './App.scss';
+import {startGame as actions} from '../reducers/gameReducer';
 
-function App() {
-  const [gameStarted, setGameStarted] = React.useState(false);
 
+function App({gameStarted, startGame}) {
   return (
-    <GameContext.Provider value={GameContext._currentValue}>
       <div className="App">
-        {!gameStarted ? (
-          <Dashboard setGameStarted={setGameStarted} />
-        ) : (
-          <MainGame game={gameStarted} />
-        )}
+        {!gameStarted ? <Dashboard startGame={startGame} /> : <MainGame />}
       </div>
-    </GameContext.Provider>
   );
 }
 
-export default App;
+const mapStateToProps = ({game}) => ({
+  gameStarted: game.gameStarted,
+});
+
+export default connect(mapStateToProps, {startGame: actions})(App);

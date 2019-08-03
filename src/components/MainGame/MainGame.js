@@ -1,4 +1,5 @@
 import React, { Component, lazy, createRef, Suspense } from 'react';
+import { connect } from 'react-redux';
 
 import TableroJuego from '../TableroJuego';
 import Seleccionables from '../Seleccionables';
@@ -8,6 +9,8 @@ import { GameContext } from '../../context/game';
 import * as validations from '../../utils/validations';
 import { setKeyHandlers } from '../../utils/handlers';
 import './main-game.scss';
+import {startGame} from '../../reducers/gameReducer';
+
 // import ScoreManager from '../../utils/ScoreManager';
 
 const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
@@ -23,7 +26,6 @@ const initState = {
   timeElapsed: 0,
   bonus: 1000,
   activeColumn: 1,
-  gameStarted: false,
   gameWin: false,
   gameLost: false,
   turnFilled: false,
@@ -103,12 +105,11 @@ const initState = {
   },
 };
 
-export default class MainGame extends Component {
+class MainGame extends Component {
   constructor(props) {
     super(props);
 
     this.context = GameContext;
-    this.state = { game: props.game };
     this.selectedItemRef = createRef();
   }
 
@@ -116,45 +117,23 @@ export default class MainGame extends Component {
     this.setState({ ...initState, ...this.context }, () => {
       const { availableColors } = this.context;
       const { activeColumn } = this.state;
-      setKeyHandlers(this.context, (key) => {
-        if (
-          Number(key) <= this.context.availableColors.length ||
-          key === 'Enter'
-        ) {
-          switch (key) {
-            case 'Enter':
-              this.handleValidate(activeColumn);
-              break;
-            case '1':
-              this.setMovement(availableColors[0]);
-              break;
-            case '2':
-              this.setMovement(availableColors[1]);
-              break;
-            case '3':
-              this.setMovement(availableColors[2]);
-              break;
-            case '4':
-              this.setMovement(availableColors[3]);
-              break;
-            case '5':
-              this.setMovement(availableColors[4]);
-              break;
-            case '6':
-              this.setMovement(availableColors[5]);
-              break;
-            case '7':
-              this.setMovement(availableColors[6]);
-              break;
-            case '8':
-              this.setMovement(availableColors[7]);
-              break;
-            default:
-              break;
+
+      setKeyHandlers((key) => {
+        if (Number(key) <= availableColors.length || key === 'Enter') {
+          if (/[1-8]/.test(key)) {
+            this.setMovement(availableColors[Number(key) - 1]);
+          }
+          if (key === 'Enter') {
+            this.handleValidate(activeColumn);
           }
         }
       });
     });
+  }
+
+  componentDidMount() {
+    console.log(this.props)
+    this.setGameTimer();
   }
 
   componentWillUnmount() {
@@ -165,21 +144,21 @@ export default class MainGame extends Component {
     this.handleSetColor(color);
   };
 
+  setGameTimer = () => {
+    let timer = 0;
+    this.gameTimer = setInterval(() => {
+      timer += 1;
+      if (this.state.bonus > 0) {
+        const penalization = 10;
+        this.setState({
+          bonus: this.state.bonus - penalization,
+          timeElapsed: timer,
+        });
+      }
+    }, 1000);
+  }
+
   handleSetColor = (color) => {
-    if (!this.state.gameStarted) {
-      this.setState({ gameStarted: true });
-      let timer = 0;
-      this.gameTimer = setInterval(() => {
-        timer += 1;
-        if (this.state.bonus > 0) {
-          const penalization = 20;
-          this.setState({
-            bonus: this.state.bonus - penalization,
-            timeElapsed: timer,
-          });
-        }
-      }, 1000);
-    }
     const { activeColumn, movement, itemColors } = this.state;
 
     if (movement / activeColumn > 4) {
@@ -300,7 +279,6 @@ export default class MainGame extends Component {
   setUserSelectedMovement = (item, column) => {
     if (column === this.state.activeColumn) {
       this.setState({ movement: item });
-      // this.setState({ userSelectedMovement: { column, item } });
     }
   };
 
@@ -309,6 +287,7 @@ export default class MainGame extends Component {
 
     const context = {
       ...this.state,
+      gameStarted: this.props.gameStarted,
       handleValidate: this.handleValidate,
       handleSetColor: this.handleSetColor,
       handleResetGame: this.handleResetGame,
@@ -345,3 +324,11 @@ export default class MainGame extends Component {
 }
 
 MainGame.contextType = GameContext;
+
+const mapStateToProps = ({game}) => ({
+  gameStarted: game.gameStarted
+});
+
+const mapDispatchToProps = {startGame};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainGame)

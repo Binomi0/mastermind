@@ -9,8 +9,6 @@ export default class Column extends Component {
   render() {
     const { isColumnActive, column } = this.props;
 
-    // console.log('Column => column', column);
-
     return (
       <GameContext.Consumer>
         {({ itemColors }) => (
