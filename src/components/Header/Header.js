@@ -15,9 +15,9 @@ const Header = ({ timeElapsed }) => {
     <div className="header">
       <h2>MasterMind Game</h2>
       {timeElapsed !== 0 && (
-        <h3>
-          Trasncurrido: <span className={blink}>{timeElapsed}</span> segundos
-        </h3>
+        <h4>
+          Transcurrido: <span className={blink}>{timeElapsed}</span> segundos
+        </h4>
       )}
     </div>
   );

@@ -4,7 +4,9 @@
   justify-content: center;
   align-items: center;
 
-  h3 {
+  h4 {
+    line-height: 0;
+    margin-top: 0;
     span.blink {
       font-size: 2rem;
       animation: blinker 1s linear infinite;
