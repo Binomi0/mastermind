@@ -20,3 +20,4 @@ export const SET_GAME_LOST = requestAction('game/SET_GAME_LOST');
 export const SET_TURN_FILLED = requestAction('game/SET_TURN_FILLED');
 export const SET_GAME_FINISHED = requestAction('game/SET_GAME_FINISHED');
 export const UPDATE_TIMER = requestAction('game/UPDATE_TIMER');
+export const ADD_NOTIFICATION = requestAction('game/ADD_NOTIFICATION');

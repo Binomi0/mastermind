@@ -1,16 +1,11 @@
 import React, { Component, lazy, createRef, Suspense } from 'react';
-import ReactNotification from 'react-notifications-component';
 
 import { connect } from 'react-redux';
 import TableroJuego from '../TableroJuego';
 import Seleccionables from '../Seleccionables';
 import Header from '../Header';
 import Validations from '../Validations';
-import * as validations from '../../utils/validations';
-import { setItemColors, setValidations } from '../../utils/helpers';
 import './main-game.scss';
-
-const GameFinish = lazy(() => import('../GameFinish'));
 
 import {
   setKeyListeners,
@@ -19,6 +14,7 @@ import {
 } from '../../utils/handlers';
 import './main-game.scss';
 import { actions } from '../../reducers/gameReducer';
+import { addNotification } from '../../reducers/notificationReducer';
 
 const GameFinish = lazy(() => import('../GameFinish'));
 
@@ -42,6 +38,10 @@ class MainGame extends Component {
           this.handleValidate();
         }
       }
+    });
+    this.props.addNotification({
+      title: '¡Vamos allá!',
+      message: 'Cuando estés listo, puedes comenzar',
     });
   }
 
@@ -96,20 +96,6 @@ class MainGame extends Component {
     }
   };
 
-  addNotification() {
-    this.notificationDOMRef.current.addNotification({
-      title: this.state.notification.title,
-      message: this.state.notification.message,
-      type: this.state.notification.type,
-      insert: 'bottom',
-      container: 'top-right',
-      animationIn: ['animated', 'fadeIn'],
-      animationOut: ['animated', 'fadeOut'],
-      dismiss: { duration: this.state.notification.duration },
-      dismissable: { click: true, touch: true },
-    });
-  }
-
   render() {
     const {
       game: { gameWin, gameLost },
@@ -145,7 +131,7 @@ class MainGame extends Component {
 
 const mapStateToProps = ({ game, score }) => ({ game, score });
 
-const mapDispatchToProps = { ...actions };
+const mapDispatchToProps = { ...actions, addNotification };
 
 export default connect(
   mapStateToProps,

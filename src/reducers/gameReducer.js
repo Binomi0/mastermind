@@ -14,6 +14,7 @@ import {
 import { shuffle } from '../utils/helpers';
 import * as validations from '../utils/validations';
 import { calculateScore } from './scoreReducer';
+import { addNotification } from '../reducers/notificationReducer';
 
 export const setUserSelectedMovement = (item, column) => (dispatch) => {
   dispatch({ type: SET_USER_MOVEMENT.SET, payload: { item, column } });
@@ -105,6 +106,14 @@ const handleValidate = (callback) => (dispatch, getState) => {
       turnFilled: false,
     },
   });
+
+  const position = gameFinish.length;
+  const colores = match.length;
+  const notification = {
+    title: '',
+    message: `Has acertado ${position} posición y ${colores} colores`,
+  };
+  dispatch(addNotification(notification));
 };
 
 const handleTurn = () => (dispatch) => {
