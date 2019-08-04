@@ -1,25 +1,25 @@
-import React, { memo } from 'react';
-
+import React from 'react';
+import { connect } from 'react-redux';
 import Column from '../Column';
-import { GameContext } from '../../context/game';
 import './tablero-juego.scss';
 
-const TableroJuego = memo(function TableroJuego() {
+const TableroJuego = ({ itemColors, activeColumn }) => {
   return (
-    <GameContext.Consumer>
-      {({ activeColumn, itemColors }) => (
-        <div className="tablero-juego">
-          {Object.keys(itemColors).map((columnIndex) => (
-            <Column
-              key={columnIndex}
-              column={columnIndex}
-              isColumnActive={activeColumn === Number(columnIndex)}
-            />
-          ))}
-        </div>
-      )}
-    </GameContext.Consumer>
+    <div className="tablero-juego">
+      {Object.keys(itemColors).map((columnIndex) => (
+        <Column
+          key={columnIndex}
+          column={columnIndex}
+          isColumnActive={activeColumn === Number(columnIndex)}
+        />
+      ))}
+    </div>
   );
+};
+
+const mapStateToProps = ({ game }) => ({
+  activeColumn: game.activeColumn,
+  itemColors: game.itemColors,
 });
 
-export default TableroJuego;
+export default connect(mapStateToProps)(TableroJuego);

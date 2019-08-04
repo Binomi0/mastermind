@@ -1,18 +1,16 @@
 import React from 'react';
 
+import { connect } from 'react-redux';
 import MainGame from '../components/MainGame';
 import Dashboard from '../components/Dashboard/Dashboard';
 import './App.scss';
 
-function App() {
-  const [gameStarted, setGameStarted] = React.useState(false);
+const App = ({ gameStarted }) => (
+  <div className="App">{!gameStarted ? <Dashboard /> : <MainGame />}</div>
+);
 
-  return (
-    <div className="App">
-      {!gameStarted && <Dashboard setGameStarted={setGameStarted} />}
-      {gameStarted && <MainGame setGameStarted={setGameStarted} />}
-    </div>
-  );
-}
+const mapStateToProps = ({ game }) => ({
+  gameStarted: game.gameStarted,
+});
 
-export default App;
+export default connect(mapStateToProps)(App);

@@ -1,27 +1,35 @@
-import React, { memo } from 'react';
-
+import React from 'react';
+import { connect } from 'react-redux';
 import Seleccionable from '../Seleccionable';
-import { GameContext } from '../../context/game';
-
+import { actions } from '../../reducers/gameReducer';
 import './seleccionable.scss';
 
-const Seleccionables = memo(function Seleccionables() {
-  return (
-    <GameContext.Consumer>
-      {({ handleValidate, turnFilled, availableColors }) => (
-        <div className="seleccionable">
-          <div className="fichas">
-            {availableColors.map((color, index) => (
-              <Seleccionable key={color} color={color} index={index + 1} />
-            ))}
-          </div>
-          <button disabled={!turnFilled} onClick={handleValidate}>
-            Validar jugada
-          </button>
+class Seleccionables extends React.Component {
+  render() {
+    const { handleValidate, turnFilled, availableColors } = this.props;
+    return (
+      <div className="seleccionable">
+        <div className="fichas">
+          {availableColors.map((color, index) => (
+            <Seleccionable key={color} color={color} index={index + 1} />
+          ))}
         </div>
-      )}
-    </GameContext.Consumer>
-  );
+        <button disabled={!turnFilled} onClick={handleValidate}>
+          Validar jugada
+        </button>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = ({ game }) => ({
+  turnFilled: game.turnFilled,
+  availableColors: game.availableColors,
 });
 
-export default Seleccionables;
+const mapDispatchToProps = { ...actions };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Seleccionables);
