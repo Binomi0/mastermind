@@ -12,7 +12,7 @@ import {
 import './main-game.scss';
 import { actions } from '../../reducers/gameReducer';
 
-const GameFinish = lazy(() => import('../GameFinish/GameFinish'));
+const GameFinish = lazy(() => import('../GameFinish'));
 
 class MainGame extends Component {
   constructor(props) {
@@ -70,8 +70,6 @@ class MainGame extends Component {
 
   handleValidate = () => {
     this.props.handleValidate(() => {
-      console.log('Juego Terminado');
-      console.log('this.gameTimer =>', this.gameTimer);
       clearInterval(this.gameTimer);
     });
   };

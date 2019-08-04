@@ -7,12 +7,15 @@ export const setNewGameLevel = (level) => (dispatch) => {
   switch (level) {
     case '5':
       newLevel = {
+        id: 5,
         items: [...levels.easyGame],
         name: 'easyGame',
+        bonus: 1000,
       };
       break;
     case '6':
       newLevel = {
+        id: 6,
         items: [...levels.mediumGame],
         name: 'mediumGame',
         bonus: 3000,
@@ -20,6 +23,7 @@ export const setNewGameLevel = (level) => (dispatch) => {
       break;
     case '7':
       newLevel = {
+        id: 7,
         items: [...levels.hardGame],
         name: 'hardGame',
         bonus: 6000,
@@ -27,6 +31,7 @@ export const setNewGameLevel = (level) => (dispatch) => {
       break;
     case '8':
       newLevel = {
+        id: 8,
         items: [...levels.extraHardGame],
         name: 'extraHardGame',
         bonus: 10000,
@@ -34,6 +39,7 @@ export const setNewGameLevel = (level) => (dispatch) => {
       break;
     default:
       newLevel = {
+        id: 5,
         items: [...levels.easyGame],
         name: 'easyGame',
         bonus: 1000,

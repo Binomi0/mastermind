@@ -33,8 +33,6 @@ class GameFinish extends Component {
       time: timeElapsed,
     };
 
-    console.log(newScore);
-
     scoreRef.on('value', (snapshot) => {
       if (snapshot.val()) {
         if (snapshot.val().score < points) {
