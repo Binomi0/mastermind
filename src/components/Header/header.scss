@@ -1,6 +1,22 @@
 .header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    span.blink {
+      font-size: 2rem;
+      animation: blinker 1s linear infinite;
+    }
+  }
+}
+
+@keyframes blinker {
+  20% {
+    opacity: 0;
+  }
+  80% {
+    color: green;
+  }
 }

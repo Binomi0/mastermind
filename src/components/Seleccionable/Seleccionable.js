@@ -1,20 +1,22 @@
-import React, { memo } from 'react';
-import { GameContext } from '../../context/game';
+import React from 'react';
+import { connect } from 'react-redux';
+import { handleSetMovement } from '../../reducers/gameReducer';
 
-const Seleccionable = memo(function Seleccionable({ color, index }) {
+const Seleccionable = ({ color, index, handleSetMovement }) => {
   return (
-    <GameContext.Consumer>
-      {({ handleSetColor }) => (
-        <div
-          onClick={() => handleSetColor(color)}
-          className="ficha-seleccionable"
-          style={{ background: color }}
-        >
-          {index}
-        </div>
-      )}
-    </GameContext.Consumer>
+    <div
+      onClick={() => handleSetMovement(color)}
+      className="ficha-seleccionable"
+      style={{ background: color }}
+    >
+      {index}
+    </div>
   );
-});
+};
 
-export default Seleccionable;
+const mapDispatchToProps = { handleSetMovement };
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Seleccionable);

@@ -1,12 +1,7 @@
 import db from '../config/firebase';
 
 class ScoreManager {
-  constructor(playerName, initScore = 0) {
-    if (!playerName) {
-      console.error('ScoreManager needs a playerName');
-      return;
-    }
-
+  constructor(playerName = 'guest', initScore = 0) {
     this.player = playerName;
     this.score = initScore;
     this.time = 0;

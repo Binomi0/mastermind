@@ -1,31 +1,37 @@
 import React, { Component } from 'react';
-
-import * as levels from '../../utils/constants';
-import { GameContext } from '../../context/game';
+import { connect } from 'react-redux';
+import { actions as settingsActions } from '../../reducers/settingsReducer';
+import { actions as userActions } from '../../reducers/userReducer';
+import { actions as gameActions } from '../../reducers/gameReducer';
 import Records from '../Records';
 import './dashboard.scss';
 
-export default class Dashboard extends Component {
-  static contextType = GameContext;
+class Dashboard extends Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    showRecords: false,
-    filled: false,
-    playerName: '',
-  };
+    this.state = {
+      showRecords: false,
+      filled: false,
+      playerName: props.playerName,
+    };
+  }
 
-  componentDidMount() {
-    const playerName = localStorage.getItem('mm-player-name');
+  componentWillMount() {
+    if (this.props.playerName !== 'Guest') {
+      this.setState({ filled: true });
+    }
+    this.props.setPlayerName();
+  }
 
-    if (playerName) {
-      this.setState({ playerName, filled: true });
-      this.context.setPlayerName(playerName);
+  componentWillUpdate(prevProps) {
+    if (prevProps.playerName !== this.props.playerName) {
+      this.setState({ filled: true });
     }
   }
 
-  handleNewGame = () => {
-    this.props.setGameStarted(true);
-    this.context.resetGame(this.state.level);
+  handleStartNewGame = () => {
+    this.props.startGame();
   };
 
   handleShowRecords = () => {
@@ -33,56 +39,23 @@ export default class Dashboard extends Component {
   };
 
   handleChange = (e) => {
-    this.setState({ playerName: e.target.value });
+    this.setState({ playerName: e.currentTarget.value });
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
 
-    localStorage.setItem('mm-player-name', this.state.playerName);
-    this.context.setPlayerName(this.state.playerName);
+    this.props.setPlayerName(this.state.playerName);
     this.setState({ filled: true });
   };
 
   handleSelectLevel = (e) => {
-    let level;
-    switch (e.currentTarget.value) {
-      case '5':
-        level = {
-          items: [...levels.easyGame],
-          name: 'easyGame',
-        };
-        break;
-      case '6':
-        level = {
-          items: [...levels.mediumGame],
-          name: 'mediumGame',
-        };
-        break;
-      case '7':
-        level = {
-          items: [...levels.hardGame],
-          name: 'hardGame',
-        };
-        break;
-      case '8':
-        level = {
-          items: [...levels.extraHardGame],
-          name: 'extraHardGame',
-        };
-        break;
-      default:
-        level = {
-          items: [...levels.easyGame],
-          name: 'easyGame',
-        };
-        break;
-    }
-    this.setState({ level });
+    this.props.setNewGameLevel(e.currentTarget.value);
   };
 
   render() {
-    const { filled, playerName, level } = this.state;
+    const { filled, showRecords } = this.state;
+    const { playerName, level } = this.props;
     return (
       <div className="dashboard">
         <h1>MasterMind Game</h1>
@@ -90,7 +63,10 @@ export default class Dashboard extends Component {
           <div>
             <h3>Bienvenido {playerName}</h3>
             {level ? (
-              <button className="new-game-button" onClick={this.handleNewGame}>
+              <button
+                className="new-game-button"
+                onClick={this.handleStartNewGame}
+              >
                 Nueva Partida
               </button>
             ) : (
@@ -111,7 +87,7 @@ export default class Dashboard extends Component {
             >
               Records
             </button>
-            {this.state.showRecords && <Records />}
+            {showRecords && <Records />}
           </div>
         )}
         <div className="form">
@@ -127,3 +103,20 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ game, settings, user }) => ({
+  gameStarted: game.gameStarted,
+  playerName: user.playerName,
+  level: settings.level,
+});
+
+const mapDispatchToProps = {
+  ...settingsActions,
+  ...userActions,
+  ...gameActions,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Dashboard);
