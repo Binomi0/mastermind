@@ -2,7 +2,6 @@ import createReducer from '../redux/create-reducer';
 import { ADD_NOTIFICATION } from '../action-types';
 
 export const addNotification = (notification) => (dispatch) => {
-  console.log('notification =>', notification);
   dispatch({ type: ADD_NOTIFICATION.SET, payload: notification });
 };
 

@@ -37,7 +37,7 @@ export const startGame = () => (dispatch, getState) => {
 };
 
 export const setGameFinished = () => (dispatch) => {
-  dispatch({ type: SET_GAME_FINISHED });
+  dispatch({ type: SET_GAME_FINISHED.SET });
 };
 
 export const handleSetMovement = ({
@@ -257,7 +257,7 @@ const ACTION_HANDLERS = {
     ...state,
     ...payload,
   }),
-  [SET_GAME_FINISHED]: (state) => ({ ...state, gameStarted: false }),
+  [SET_GAME_FINISHED.SET]: (state) => ({ ...state, gameStarted: false }),
   [UPDATE_TIMER.SET]: (state, { payload }) => ({
     ...state,
     timeElapsed: payload,

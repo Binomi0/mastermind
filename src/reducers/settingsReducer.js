@@ -1,6 +1,10 @@
 import createReducer from '../redux/create-reducer';
-import { SET_LEVEL } from '../action-types';
+import { SET_LEVEL, RESET_LEVEL } from '../action-types';
 import * as levels from '../utils/constants';
+
+export const resetLevel = () => (dispatch) => {
+  dispatch({ type: RESET_LEVEL.SET });
+};
 
 export const setNewGameLevel = (level) => (dispatch) => {
   let newLevel;
@@ -58,6 +62,7 @@ const INITIAL_STATE = {
 };
 
 const ACTION_HANDLERS = {
+  [RESET_LEVEL.SET]: () => INITIAL_STATE,
   [SET_LEVEL.SET]: (state, { payload }) => ({ ...state, level: payload }),
 };
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import db from '../../config/firebase';
 import Records from '../Records';
 import { actions } from '../../reducers/gameReducer';
+import { resetLevel } from '../../reducers/settingsReducer';
 import './gameFinish.scss';
 
 const confettiConfig = {
@@ -52,6 +53,7 @@ class GameFinish extends Component {
   handleResetGame = () => {
     this.props.resetGame();
     this.props.setGameFinished();
+    this.props.resetLevel();
   };
 
   render() {
@@ -101,5 +103,5 @@ const mapStateToProps = ({ settings, game, score, user }) => ({
 
 export default connect(
   mapStateToProps,
-  { ...actions },
+  { ...actions, resetLevel },
 )(GameFinish);

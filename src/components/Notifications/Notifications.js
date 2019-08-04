@@ -16,8 +16,6 @@ class Notification extends React.Component {
   }
 
   componentWillUpdate(prevProps, prevState) {
-    console.log('prevProps =>', prevProps);
-    console.log('prevState =>', prevState);
     if (
       prevProps.title !== prevState.title ||
       prevProps.message !== prevState.message
